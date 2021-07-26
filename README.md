@@ -1,0 +1,1 @@
+# wplug-slider
