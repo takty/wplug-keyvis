@@ -1,0 +1,102 @@
+# Translation of Slider - Development in Japanese
+# @package Slider
+# @author Takuto Yanagida
+# @version 2021-07-20
+
+# Post Type --------------------------------------------------------------------
+
+msgctxt "post type"
+msgid "Publication List"
+msgstr "業績リスト"
+
+msgctxt "post type"
+msgid "Add category groups themselves"
+msgstr "分類グループ自体を追加"
+
+msgctxt "post type"
+msgid "Add categories to the category group"
+msgstr "分類グループに分類を追加"
+
+msgctxt "post type"
+msgid "Update List"
+msgstr "リストを更新"
+
+# 'Publication List',                     'ja', '業績リスト'
+# 'Add category groups themselves',       'ja', '分類グループ自体を追加'
+# 'Add categories to the category group', 'ja', '分類グループに分類を追加'
+# 'Update List',                          'ja', 'リストを更新'
+
+# Taxonomy ---------------------------------------------------------------------
+
+msgctxt "taxonomy"
+msgid "Category group"
+msgstr "分類グループ"
+
+msgctxt "taxonomy"
+msgid "Category"
+msgstr "分類"
+
+msgctxt "taxonomy"
+msgid "Filter"
+msgstr "フィルター"
+
+msgctxt "taxonomy"
+msgid "Omit the last category group"
+msgstr "一番最後の分類グループを省略する"
+
+msgctxt "taxonomy"
+msgid "Hide from view screen"
+msgstr "閲覧画面から隠す"
+
+# 'Category group',               'ja', '分類グループ'
+# 'Category',                     'ja', '分類'
+# 'Filter',                       'ja', 'フィルター'
+# 'Omit the last category group', 'ja', '一番最後の分類グループを省略する'
+# 'Hide from view screen',        'ja', '閲覧画面から隠す'
+
+# Template Admin ---------------------------------------------------------------
+
+msgid "Publication list"
+msgstr "業績リスト"
+
+msgctxt "template admin"
+msgid "Used publication list:"
+msgstr "使用する業績リスト:"
+
+msgctxt "template admin"
+msgid "Target period (years):"
+msgstr "対象期間（年）:"
+
+msgctxt "template admin"
+msgid "Specify the number of items to be displayed:"
+msgstr "表示件数の指定:"
+
+msgctxt "template admin"
+msgid "(If specified, the heading will be hidden)"
+msgstr "（指定すると、見出しは非表示になります）"
+
+msgctxt "template admin"
+msgid "Sort by date first"
+msgstr "最初に日付で並び替える"
+
+msgctxt "template admin"
+msgid "Duplicate multi-category items"
+msgstr "複数のカテゴリーを持つ項目を複製"
+
+msgctxt "template admin"
+msgid "Show filter"
+msgstr "フィルターを表示"
+
+msgctxt "template admin"
+msgid "Omit headings for categories with only one item"
+msgstr "項目が1つしかない分類の見出しを省略"
+
+# 'Publication list',                                'ja', '業績リスト'
+# 'Used publication list:',                          'ja', '使用する業績リスト:'
+# 'Target period (years):',                          'ja', '対象期間（年）:'
+# 'Specify the number of items to be displayed:',    'ja', '表示件数の指定:'
+# '(If specified, the heading will be hidden)',      'ja', '（指定すると、見出しは非表示になります）'
+# 'Sort by date first',                              'ja', '最初に日付で並び替える'
+# 'Duplicate multi-category items',                  'ja', '複数のカテゴリーを持つ項目を複製'
+# 'Show filter',                                     'ja', 'フィルターを表示'
+# 'Omit headings for categories with only one item', 'ja', '1つしかない分類の見出しを省略'
