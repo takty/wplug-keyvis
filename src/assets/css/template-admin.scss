@@ -1,0 +1,195 @@
+/**
+ *
+ * Slider (Show) Admin (SCSS)
+ *
+ * @author Takuto Yanagida @ Space-Time Inc.
+ * @version 2021-08-24
+ *
+ */
+
+
+.wplug-slider-show-table {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+.wplug-slider-show-item {
+	display: flex;
+	background-color: rgba(255, 255, 255, 0.75);
+
+	& + .wplug-slider-show-item {
+		margin-top: 1em;
+	}
+	&.ui-sortable-helper {
+		margin-top: 0;
+	}
+
+	> div:nth-child(1) {
+		display: flex;
+		flex-direction: column;
+		padding-top: 0.15em;
+		padding-right: 4px;
+
+		.wplug-slider-show-handle {
+			flex-grow: 1;
+
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			color: #bbb;
+			cursor: move;
+		}
+		.wplug-slider-show-delete-label {
+			white-space: nowrap;
+			color: #a00;
+			text-align: center;
+			font-size: 11px;
+			line-height: 1;
+		}
+		.wplug-slider-show-delete {
+			color: #a00;
+			margin-top: 2px;
+			margin-right: 0;
+		}
+	}
+	> div:nth-child(2) {
+		flex-grow: 1;
+
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+	}
+}
+
+.wplug-slider-show-item-template-img,
+.wplug-slider-show-item-template-video {
+	display: none;
+}
+
+.wplug-slider-show-item-placeholder {
+	height: 140px;
+}
+
+.wplug-slider-show-item-deleted > div:nth-child(2) {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.wplug-slider-show-info {
+	padding-left: 8px;
+	flex-grow: 1;
+
+	display: flex;
+	flex-direction: column;
+
+	> div {
+		display: flex;
+		align-items: center;
+	}
+	input[type=text] {
+		width: 100%;
+	}
+	.wplug-slider-show-select-url {
+		margin-left: 4px !important;
+	}
+}
+
+.wplug-slider-show-thumbnail-wrap {
+	display: flex;
+	width: 100%;
+	max-width: calc(320px + 16px);
+}
+
+.wplug-slider-show-thumbnail {
+	margin-top  : 2px;
+	padding-left: 8px;
+	width       : 100%;
+	max-width   : 160px;
+
+	position: relative;
+
+	> a {
+		display : block;
+		position: relative;
+
+		border-color    : #ccc;
+		background-color: #f7f7f7;
+		box-shadow      : 0 1px 0 #ccc;
+
+		border-width : 1px;
+		border-style : solid;
+		border-radius: 3px;
+		overflow     : hidden;
+		white-space  : nowrap;
+		box-sizing   : border-box;
+
+		&:hover {
+			background-color: #fafafa;
+			border-color    : #999;
+		}
+		&:active {
+			background-color: #eee;
+			border-color    : #999;
+			box-shadow      : inset 0 2px 5px -3px rgba(#000, 0.5);
+			transform       : translateY(1px);
+		}
+		&::before {
+			content    : '';
+			display    : block;
+			padding-top: 56.25%;  // 16:9
+		}
+
+		> video {
+			position : absolute;
+			top      : 50%;
+			transform: translate(0, -50%);
+		}
+		> div {
+			position: absolute;
+			top     : 0;
+			left    : 0;
+			right   : 0;
+			bottom  : 0;
+
+			pointer-events: none;
+
+			background-size    : contain;
+			background-repeat  : no-repeat;
+			background-position: center center;
+		}
+	}
+	.wplug-slider-show-thumbnail-name {
+		position: absolute;
+		left    : 10px;
+		right   : 2px;
+		bottom  : 0;
+
+		pointer-events: none;
+
+		> div {
+			text-overflow: ellipsis;
+			white-space  : nowrap;
+			overflow     : hidden;
+
+			font-size: 0.85em;
+			color: #fff;
+			text-shadow:
+				#000 1px    1px  2px, #000 -#{1px}    1px  2px,
+				#000 1px -#{1px} 2px, #000 -#{1px} -#{1px} 2px,
+				#000 0      1px  2px, #000 -#{1px}    0    2px,
+				#000 0   -#{1px} 2px, #000    1px     0    2px;
+		}
+	}
+}
+
+.wplug-slider-show-add-row {
+	text-align: right;
+	margin-top: 0.5em;
+
+	.wplug-slider-show-item + & {
+		margin-top: 1.5em;
+	}
+}
