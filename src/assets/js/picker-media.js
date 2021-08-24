@@ -83,7 +83,7 @@ function setMediaPicker(elm, cls = null, fn = null, opts = {}) {
 		wp.media.model.settings.post.id = postId;
 		wp.media.view.settings.post.id  = postId;
 
- 		const media = wp.media({
+		const media = wp.media({
 			title   : title,
 			library : {type: type},
 			frame   : 'select',
