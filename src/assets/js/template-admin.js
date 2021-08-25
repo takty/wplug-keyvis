@@ -3,7 +3,7 @@
  * Slider (Show) Admin (JS)
  *
  * @author Takuto Yanagida @ Space-Time Inc.
- * @version 2021-08-24
+ * @version 2021-08-25
  *
  */
 
@@ -156,6 +156,10 @@ function wplug_slider_show_admin(t) {
 				const sel = tn.getElementsByClassName(CLS_SEL_MEDIA)[0];
 				setMediaPicker(sel, false, (t, f) => {
 					if (tn === tns[0]) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
+
+					const img = tn.querySelector(':scope > a > img');
+					if (img) img.parentElement.removeChild(img);
+
 					tn.getElementsByClassName(CLS_TN_MEDIA)[0].style.backgroundImage = 'url(' + f.url + ')';
 					set_item(tn, f);
 				}, { multiple: false, type: 'image', title: STR_SEL });

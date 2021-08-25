@@ -4,7 +4,7 @@
  *
  * @package Wplug Slider
  * @author Takuto Yanagida
- * @version 2021-08-24
+ * @version 2021-08-25
  */
 
 namespace wplug\slider;
@@ -84,14 +84,14 @@ function _output_row_tn( string $key, array $it, string $name_pf ) {
 	$_media = esc_attr( $it["media$name_pf"]    ?? '' );
 	$_title = esc_attr( $it["title$name_pf"]    ?? '' );
 	$_fn    = esc_attr( $it["filename$name_pf"] ?? '' );
-	$_img   = esc_url( $it["image$name_pf"]     ?? '' );
-	$_style = empty( $_img ) ? '' : " style=\"background-image:url($_img)\"";
+	$img    = $it["img_tag$name_pf"] ?? '';
 
 	if ( ! empty( $_title ) && strlen( $_title ) < strlen( $_fn ) && strpos( $_fn, $_title ) === 0 ) $_title = '';
 ?>
 				<div class="wplug-slider-show-thumbnail">
 					<a href="javascript:void(0);" class="frame wplug-slider-show-select-media" title="<?php echo "$_title&#x0A;$_fn" ?>">
-						<div class="wplug-slider-show-thumbnail-media"<?php echo $_style ?>></div>
+						<?php echo $img; ?>
+						<div class="wplug-slider-show-thumbnail-media"></div>
 					</a>
 					<div class="wplug-slider-show-thumbnail-name">
 						<div class="wplug-slider-show-title"><?php echo $_title ?></div>
