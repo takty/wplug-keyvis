@@ -149,7 +149,7 @@ function _echo_slide_item_img( array $it, string $caption_type ) {
 	$cont  = $it['img_tag'] . ( $it['img_tag_sub'] ?? '' );
 	$cont .= _create_slide_caption( $it['caption'], $caption_type );
 
-	$_link = esc_url( $url );
+	$_link = esc_url( $it['url'] );
 	$cont  = empty( $_link ) ? $cont : "<a href=\"$_link\">$cont</a>";
 	echo "<li>$cont</li>\n";
 }
@@ -160,7 +160,7 @@ function _echo_slide_item_video( array $it, string $caption_type ) {
 	$cont  = "<video><source src=\"$_src\"></video>";
 	$cont .= _create_slide_caption( $it['caption'], $caption_type );
 
-	$_link = esc_url( $url );
+	$_link = esc_url( $it['url'] );
 	$cont  = empty( $_link ) ? $cont : "<a href=\"$_link\">$cont</a>";
 	echo "<li>$cont</li>\n";
 }
