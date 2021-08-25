@@ -53,9 +53,9 @@ function _cb_output_html_template_admin( array $args, \WP_Post $post ) {
 ?>
 				<div class="wplug-slider-show-add-row">
 <?php if ( $args['is_video_enabled'] ) : ?>
-					<button type="button" class="wplug-slider-show-add-video button"><?php _e( 'Add Video', 'default' ) ?></button>
+					<button type="button" class="wplug-slider-show-add-video button"><?php _e( 'Add Video', 'wplug_slider' ) ?></button>
 <?php endif; ?>
-					<button type="button" class="wplug-slider-show-add-img button"><?php _e( 'Add Media', 'default' ) ?></button>
+					<button type="button" class="wplug-slider-show-add-img button"><?php _e( 'Add Images', 'wplug_slider' ) ?></button>
 				</div>
 			</div>
 		</div>
@@ -134,17 +134,17 @@ function _output_row_common( string $key, array $it, string $cls ) {
 	<div class="<?php echo $cls ?>">
 		<div>
 			<div class="wplug-slider-show-handle">=</div>
-			<label class="widget-control-remove wplug-slider-show-delete-label"><?php _e( 'Remove', 'default' ) ?><br>
+			<label class="widget-control-remove wplug-slider-show-delete-label"><?php _e( 'Remove', 'wplug_slider' ) ?><br>
 			<input type="checkbox" name="<?php echo $key; ?>[delete]" class="wplug-slider-show-delete" value="1"></label>
 		</div>
 		<div>
 			<div class="wplug-slider-show-info">
-				<div><?php esc_html_e( 'Caption', 'default' ) ?>:</div>
+				<div><?php esc_html_e( 'Caption', 'wplug_slider' ) ?>:</div>
 				<div><input type="text" name="<?php echo $key; ?>[caption]" class="wplug-slider-show-caption" value="<?php echo $_cap ?>"></div>
 				<div><a href="javascript:void(0);" class="wplug-slider-show-url-opener">URL</a>:</div>
 				<div>
 					<input type="text" name="<?php echo $key; ?>[url]" class="wplug-slider-show-url" value="<?php echo $_url ?>">
-					<button type="button" class="button wplug-slider-show-select-url"><?php _e( 'Select', 'default' ) ?></button>
+					<button type="button" class="button wplug-slider-show-select-url"><?php _e( 'Select', 'wplug_slider' ) ?></button>
 				</div>
 			</div>
 <?php
