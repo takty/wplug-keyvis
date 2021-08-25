@@ -9,20 +9,19 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
-	const ts = document.getElementsByClassName('wplug-slider-show-admin');
+	const ts = document.getElementsByClassName('wplug-slider-admin');
 	for (const t of ts) {
 		wplug_slider_show_admin(t);
 	}
 } );
 
 function wplug_slider_show_admin(t) {
-	const NS = 'wplug-slider-show';
+	const NS = 'wplug-slider';
 
 	const CLS_TABLE           = NS + '-table';
 	const CLS_ITEM            = NS + '-item';
 	const CLS_ITEM_TEMP_IMG   = NS + '-item-template-img';
 	const CLS_ITEM_TEMP_VIDEO = NS + '-item-template-video';
-	const CLS_ITEM_PH         = NS + '-item-placeholder';
 	const CLS_ITEM_DEL        = NS + '-item-deleted';
 	const CLS_HANDLE          = NS + '-handle';
 	const CLS_DEL             = NS + '-delete';
@@ -43,37 +42,37 @@ function wplug_slider_show_admin(t) {
 	const CLS_FILENAME     = NS + '-filename';
 
 	const STR_ADD = document.getElementsByClassName(CLS_ADD_IMG)[0].innerText;
-	const STR_SEL = document.getElementsByClassName(CLS_SEL_URL)[0].innerText;
 
-	const key = t.dataset.key;
+	const temp = document.getElementsByClassName(CLS_SEL_URL);
+	const STR_SEL = temp.length ? temp[0].innerText : '';
+
+	const key     = t.dataset.key;
+	const is_show = t.classList.contains('show');
 
 	const tbl       = t.getElementsByClassName(CLS_TABLE)[0];
 	const items     = tbl.getElementsByClassName(CLS_ITEM);
-	const tempImg   = tbl.getElementsByClassName(CLS_ITEM_TEMP_IMG)[0];
-	const tempVideo = tbl.getElementsByClassName(CLS_ITEM_TEMP_VIDEO)[0];
-	const addRow    = tbl.getElementsByClassName(CLS_ADD_ROW)[0];
-	const addImg    = tbl.getElementsByClassName(CLS_ADD_IMG)[0];
-	const addVideos = tbl.getElementsByClassName(CLS_ADD_VIDEO);
+	const tempImg   = t.getElementsByClassName(CLS_ITEM_TEMP_IMG)[0];
+	const tempVideo = t.getElementsByClassName(CLS_ITEM_TEMP_VIDEO)[0];
+	const addRow    = t.getElementsByClassName(CLS_ADD_ROW)[0];
+	const addImg    = t.getElementsByClassName(CLS_ADD_IMG)[0];
+	const addVideos = t.getElementsByClassName(CLS_ADD_VIDEO);
 	const addVideo  = addVideos.length ? addVideos[0] : null;
 
-	jQuery(tbl).sortable();
-	jQuery(tbl).sortable('option', {
-		axis       : 'y',
-		containment: 'parent',
-		cursor     : 'move',
-		handle     : '.' + CLS_HANDLE,
-		items      : '> .' + CLS_ITEM,
-		placeholder: CLS_ITEM_PH,
+	sortable(tbl, {
+		handle              : '.' + CLS_HANDLE,
+		forcePlaceholderSize: true,
 	});
 
 	for (let i = 0; i < items.length; i += 1) assign_event_listener(items[i]);
 
 	setMediaPicker(addImg, false, (t, ms) => {
 		ms.forEach((m) => { add_new_item_image(m); });
+		sortable(tbl);
 	}, { multiple: true, type: 'image', title: STR_ADD });
 	if (addVideo) {
 		setMediaPicker(addVideo, false, (t, ms) => {
 			ms.forEach((m) => { add_new_item_video(m); });
+			sortable(tbl);
 		}, { multiple: true, type: 'video', title: STR_ADD });
 	}
 
@@ -89,7 +88,7 @@ function wplug_slider_show_admin(t) {
 
 		it.classList.remove(CLS_ITEM_TEMP_IMG);
 		it.classList.add(CLS_ITEM);
-		tbl.insertBefore(it, addRow);
+		tbl.appendChild(it);
 		assign_event_listener(it);
 	}
 
@@ -101,12 +100,12 @@ function wplug_slider_show_admin(t) {
 
 		it.classList.remove(CLS_ITEM_TEMP_VIDEO);
 		it.classList.add(CLS_ITEM);
-		tbl.insertBefore(it, addRow);
+		tbl.appendChild(it, addRow);
 		assign_event_listener(it);
 	}
 
 	function set_new_item(it, f) {
-		it.getElementsByClassName(CLS_CAP)[0].value          = f.caption;
+		if (is_show) it.getElementsByClassName(CLS_CAP)[0].value          = f.caption;
 		it.getElementsByClassName(CLS_MEDIA)[0].value        = f.id;
 		it.getElementsByClassName(CLS_FILENAME)[0].innerText = f.filename;
 		const tn = it.getElementsByClassName(CLS_TN)[0];
@@ -120,9 +119,9 @@ function wplug_slider_show_admin(t) {
 		}
 
 		const idx = tbl.getElementsByClassName(CLS_ITEM).length;
+		if (is_show) set_idx(it.getElementsByClassName(CLS_CAP), idx);
+		if (is_show) set_idx(it.getElementsByClassName(CLS_URL), idx);
 		set_idx(it.getElementsByClassName(CLS_DEL), idx);
-		set_idx(it.getElementsByClassName(CLS_CAP), idx);
-		set_idx(it.getElementsByClassName(CLS_URL), idx);
 		set_idx(it.getElementsByClassName(CLS_TYPE), idx);
 		set_idx(it.getElementsByClassName(CLS_MEDIA), idx);
 	}
@@ -143,20 +142,21 @@ function wplug_slider_show_admin(t) {
 				it.classList.remove(CLS_ITEM_DEL);
 			}
 		});
-		opener.addEventListener('click', (e) => {
-			e.preventDefault();
-			const url = it.getElementsByClassName(CLS_URL)[0].value;
-			if (url) window.open(url);
-		});
-		setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; });
+		if (is_show) {
+			opener.addEventListener('click', (e) => {
+				e.preventDefault();
+				const url = it.getElementsByClassName(CLS_URL)[0].value;
+				if (url) window.open(url);
+			});
+			setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; });
+		}
 
 		const tns = it.getElementsByClassName(CLS_TN);
 		if (it.getElementsByClassName(CLS_TYPE)[0].value === 'image') {
 			for (const tn of tns) {
 				const sel = tn.getElementsByClassName(CLS_SEL_MEDIA)[0];
 				setMediaPicker(sel, false, (t, f) => {
-					if (tn === tns[0]) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
-
+					if (is_show && tn === tns[0]) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 					const img = tn.querySelector(':scope > a > img');
 					if (img) img.parentElement.removeChild(img);
 
@@ -168,7 +168,7 @@ function wplug_slider_show_admin(t) {
 			const tn = tns[0];
 			const sel = tn.getElementsByClassName(CLS_SEL_MEDIA)[0];
 			setMediaPicker(sel, false, (t, f) => {
-				tn.getElementsByClassName(CLS_CAP)[0].value  = f.caption;
+				if (is_show) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 				tn.getElementsByClassName(CLS_TN_MEDIA)[0].src = f.url;
 				set_item(tn, f);
 			}, { multiple: false, type: 'video', title: STR_SEL });
