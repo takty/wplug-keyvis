@@ -3,7 +3,7 @@
  * Slider (Show) Admin (JS)
  *
  * @author Takuto Yanagida @ Space-Time Inc.
- * @version 2021-08-25
+ * @version 2021-08-26
  *
  */
 
@@ -105,7 +105,7 @@ function wplug_slider_show_admin(t) {
 	}
 
 	function set_new_item(it, f) {
-		if (is_show) it.getElementsByClassName(CLS_CAP)[0].value          = f.caption;
+		if (is_show) it.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 		it.getElementsByClassName(CLS_MEDIA)[0].value        = f.id;
 		it.getElementsByClassName(CLS_FILENAME)[0].innerText = f.filename;
 		const tn = it.getElementsByClassName(CLS_TN)[0];
@@ -156,7 +156,7 @@ function wplug_slider_show_admin(t) {
 			for (const tn of tns) {
 				const sel = tn.getElementsByClassName(CLS_SEL_MEDIA)[0];
 				setMediaPicker(sel, false, (t, f) => {
-					if (is_show && tn === tns[0]) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
+					if (is_show && tn === tns[0]) it.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 					const img = tn.querySelector(':scope > a > img');
 					if (img) img.parentElement.removeChild(img);
 
@@ -168,7 +168,7 @@ function wplug_slider_show_admin(t) {
 			const tn = tns[0];
 			const sel = tn.getElementsByClassName(CLS_SEL_MEDIA)[0];
 			setMediaPicker(sel, false, (t, f) => {
-				if (is_show) tn.getElementsByClassName(CLS_CAP)[0].value = f.caption;
+				if (is_show) it.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 				tn.getElementsByClassName(CLS_TN_MEDIA)[0].src = f.url;
 				set_item(tn, f);
 			}, { multiple: false, type: 'video', title: STR_SEL });
