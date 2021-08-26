@@ -21,8 +21,8 @@
 		"ie >= 11"
 	],
 	"dependencies": {
-		"@babel/core": "^7.14.8",
-		"@babel/preset-env": "^7.14.8",
+		"@babel/core": "^7.15.0",
+		"@babel/preset-env": "^7.15.0",
 		"gida-slider": "git+https://github.com/takty/gida-slider.git#v1",
 		"gulp": "^4.0.2",
 		"gulp-autoprefixer": "^8.0.0",
