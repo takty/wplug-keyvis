@@ -4,7 +4,7 @@
  *
  * @package Wplug Slider
  * @author Takuto Yanagida
- * @version 2021-08-25
+ * @version 2021-08-26
  */
 
 namespace wplug\slider;
@@ -60,9 +60,9 @@ function _set_default_args( array $args ): array {
 	return $args;
 }
 
-function _create_option_str( array $args ): string {
+function _create_option_str( array $args, array $opts ): string {
 	$opts = [
-		'effect_type'           => $args['effect_type'],
+		'effect_type'           => $opts['effect_type'] ?? $args['effect_type'],
 		'duration_time'         => $args['duration_time'],
 		'transition_time'       => $args['transition_time'],
 		'background_opacity'    => $args['background_opacity'],
@@ -107,8 +107,8 @@ function the_show( array $args, ?int $post_id = null ): bool {
 	if ( null === $post ) return false;
 	$post_id = $post->ID;
 
-	$args = _set_default_args( $args );
-	$its  = _get_items( true, $args, $post_id );
+	$args           = _set_default_args( $args );
+	[ $its, $opts ] = _get_data( true, $args, $post_id );
 	if ( empty( $its ) ) return false;
 
 	$dom_id  = "{$args['id']}-$post_id";
@@ -119,10 +119,11 @@ function the_show( array $args, ?int $post_id = null ): bool {
 			<ul class="gida-slider-show-slides">
 <?php
 	foreach ( $its as $it ) {
+		$cap_type = $it['caption_type'] ?? $args['caption_type'];
 		if ( 'image' === $it['type'] ) {
-			_echo_slide_item_img( $it, $args['caption_type'], true );
+			_echo_slide_item_img( $it, $cap_type, true );
 		} else if ( 'video' === $it['type'] ) {
-			_echo_slide_item_video( $it, $args['caption_type'], true );
+			_echo_slide_item_video( $it, $cap_type, true );
 		}
 	}
 ?>
@@ -133,7 +134,7 @@ function the_show( array $args, ?int $post_id = null ): bool {
 		<div class="gida-slider-show-rivets"></div>
 	</section>
 <?php
-	$opts_str = _create_option_str( $args );
+	$opts_str = _create_option_str( $args, $opts );
 	wp_add_inline_script( 'wplug-slider-show', "GIDA.slider_show('$dom_id', $opts_str);" );
 	return true;
 }
@@ -146,8 +147,8 @@ function the_hero( array $args, ?int $post_id = null ): bool {
 	if ( null === $post ) return false;
 	$post_id = $post->ID;
 
-	$args = _set_default_args( $args );
-	$its  = _get_items( false, $args, $post_id );
+	$args           = _set_default_args( $args );
+	[ $its, $opts ] = _get_data( false, $args, $post_id );
 	if ( empty( $its ) ) return false;
 
 	$dom_id  = "{$args['id']}-$post_id";
@@ -169,7 +170,7 @@ function the_hero( array $args, ?int $post_id = null ): bool {
 		</div>
 	</section>
 <?php
-	$opts_str = _create_option_str( $args );
+	$opts_str = _create_option_str( $args, $opts );
 	wp_add_inline_script( 'wplug-slider-hero', "GIDA.slider_hero('$dom_id', $opts_str);" );
 	return true;
 }
@@ -218,8 +219,8 @@ function the_show_items( array $args, ?int $post_id = null ) {
 	if ( null === $post ) return false;
 	$post_id = $post->ID;
 
-	$args   = _set_default_args( $args );
-	$its    = _get_items( true, $args, $post_id );
+	$args           = _set_default_args( $args );
+	[ $its, $opts ] = _get_data( true, $args, $post_id );
 	$dom_id = "{$args['id']}-$post_id";
 
 	foreach ( $its as $idx => $it ) {
@@ -241,11 +242,11 @@ function the_show_items( array $args, ?int $post_id = null ) {
 // -----------------------------------------------------------------------------
 
 
-function _save_items( bool $is_show, array $args, int $post_id ) {
-	$sub_keys = array_merge( [ 'media', 'type', 'delete' ], $is_show ? [ 'caption', 'url' ] : [] );
+function _save_data( bool $is_show, array $args, int $post_id ) {
+	$sub_keys = array_merge( [ 'media', 'type', 'delete' ], $is_show ? [ 'caption', 'caption_type', 'url' ] : [] );
 	if ( $args['is_dual'] ) $sub_keys[] = 'media_sub';
 
-	$its = get_multiple_post_meta_from_post( $args['key'], $sub_keys );
+	$its = get_multiple_post_meta_from_env( $args['key'], $sub_keys );
 	$its = array_filter( $its, function ( $it ) { return ! $it['delete'] && $it['type'] !== 'template'; } );
 	$its = array_values( $its );
 
@@ -253,17 +254,25 @@ function _save_items( bool $is_show, array $args, int $post_id ) {
 		$pid = url_to_postid( $it['url'] );
 		if ( $pid !== 0 ) $it['url'] = $pid;
 	}
-	$sub_keys = array_merge( [ 'media', 'type' ], $is_show ? [ 'caption', 'url' ] : [] );
+	$sub_keys = array_merge( [ 'media', 'type' ], $is_show ? [ 'caption', 'caption_type', 'url' ] : [] );
 	if ( $args['is_dual'] ) $sub_keys[] = 'media_sub';
-	update_multiple_post_meta( $post_id, $args['key'], $its, $sub_keys );
+
+	$its['options'] = [];
+	$its['options']['is_shuffled'] = $_POST["{$args['key']}_is_shuffled"] ? true : false;
+	$its['options']['effect_type'] = $_POST["{$args['key']}_effect_type"];
+
+	update_multiple_post_meta( $post_id, $args['key'], $its, $sub_keys, 'options' );
 }
 
-function _get_items( bool $is_show, array $args, int $post_id ): array {
-	$sub_keys = array_merge( [ 'media', 'type' ], $is_show ? [ 'caption', 'url' ] : [] );
+function _get_data( bool $is_show, array $args, int $post_id ): array {
+	$sub_keys = array_merge( [ 'media', 'type' ], $is_show ? [ 'caption', 'caption_type', 'url' ] : [] );
 	if ( $args['is_dual'] ) $sub_keys[] = 'media_sub';
 
 	$post = get_post( $post_id );
-	$its  = get_multiple_post_meta( $post->ID, $args['key'], $sub_keys );
+	$its  = get_multiple_post_meta( $post->ID, $args['key'], $sub_keys, 'options' );
+
+	$opts = $its['options'];
+	unset( $its['options'] );
 
 	foreach ( $its as &$it ) {
 		if ( isset( $it['url'] ) && is_numeric( $it['url'] ) ) {
@@ -286,8 +295,8 @@ function _get_items( bool $is_show, array $args, int $post_id ): array {
 			$it = array_merge( $it, _get_image_meta( $it['media'] ) );
 		}
 	}
-	if ( ! is_admin() && $args['is_shuffled'] ) shuffle( $its );
-	return $its;
+	if ( ! is_admin() && ( $opts['is_shuffled'] ?? $args['is_shuffled'] ) ) shuffle( $its );
+	return [ $its, $opts ];
 }
 
 function _get_images( array &$it, int $aid, string $view_size, string $pf = '' ) {

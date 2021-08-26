@@ -1,7 +1,7 @@
 # Translation of Slider - Development in Japanese
 # @package Wplug Slider
 # @author Takuto Yanagida
-# @version 2021-08-25
+# @version 2021-08-26
 
 # Template Admin ---------------------------------------------------------------
 
@@ -17,11 +17,43 @@ msgstr "削除"
 msgid "Caption"
 msgstr "キャプション"
 
+msgid "Line"
+msgstr "線形"
+
+msgid "Circle"
+msgstr "円形"
+
+msgid "Subtitle"
+msgstr "字幕"
+
 msgid "Select"
 msgstr "選択"
 
-# 'Add Video',  'ja', '動画を追加'
-# 'Add Images', 'ja', '画像を追加'
-# 'Remove',     'ja', '削除:'
-# 'Caption',    'ja', 'キャプション'
-# 'Select',     'ja', '選択'
+msgid "Shuffled"
+msgstr "シャッフル"
+
+msgid "Effect Type"
+msgstr "効果の種類"
+
+msgid "Fade"
+msgstr "フェード"
+
+msgid "Slide"
+msgstr "スライド"
+
+msgid "Scroll"
+msgstr "スクロール"
+
+# 'Add Video',   'ja', '動画を追加'
+# 'Add Images',  'ja', '画像を追加'
+# 'Remove',      'ja', '削除'
+# 'Caption',     'ja', 'キャプション'
+# 'Line',        'ja', '線形'
+# 'Circle',      'ja', '円形'
+# 'Subtitle',    'ja', '字幕'
+# 'Select',      'ja', '選択'
+# 'Shuffled',    'ja', 'シャッフル'
+# 'Effect Type', 'ja', '効果の種類'
+# 'Fade',        'ja', 'フェード'
+# 'Slide',       'ja', 'スライド'
+# 'Scroll',      'ja', 'スクロール'
