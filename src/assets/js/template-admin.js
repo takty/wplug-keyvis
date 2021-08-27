@@ -1,22 +1,22 @@
 /**
  *
- * Slider (Show) Admin (JS)
+ * Template Admin (JS)
  *
- * @author Takuto Yanagida @ Space-Time Inc.
- * @version 2021-08-26
+ * @author Takuto Yanagida
+ * @version 2021-08-27
  *
  */
 
 
 document.addEventListener('DOMContentLoaded', function () {
-	const ts = document.getElementsByClassName('wplug-slider-admin');
+	const ts = document.getElementsByClassName('wplug-keyvis-admin');
 	for (const t of ts) {
-		wplug_slider_show_admin(t);
+		wplug_keyvis_show_admin(t);
 	}
 } );
 
-function wplug_slider_show_admin(t) {
-	const NS = 'wplug-slider';
+function wplug_keyvis_show_admin(t) {
+	const NS = 'wplug-keyvis';
 
 	const CLS_TABLE           = NS + '-table';
 	const CLS_ITEM            = NS + '-item';

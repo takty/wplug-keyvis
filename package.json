@@ -1,7 +1,7 @@
 {
-	"name": "wplug-slider",
-	"version": "1.21.7",
-	"description": "A Component of WordPress for Slide Show",
+	"name": "wplug-keyvis",
+	"version": "1.21.8",
+	"description": "A Component of WordPress for Gida Slider",
 	"author": "Takuto Yanagida",
 	"main": "gulpfile.js",
 	"scripts": {
@@ -10,13 +10,13 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/takty/wplug-slider.git"
+		"url": "git+https://github.com/takty/wplug-keyvis.git"
 	},
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/takty/wplug-slider/issues"
+		"url": "https://github.com/takty/wplug-keyvis/issues"
 	},
-	"homepage": "https://github.com/takty/wplug-slider#readme",
+	"homepage": "https://github.com/takty/wplug-keyvis#readme",
 	"browserslist": [
 		"ie >= 11"
 	],

@@ -1,14 +1,14 @@
 /**
  *
- * Slider (Show) Admin (SCSS)
+ * Template Admin (SCSS)
  *
- * @author Takuto Yanagida @ Space-Time Inc.
- * @version 2021-08-26
+ * @author Takuto Yanagida
+ * @version 2021-08-27
  *
  */
 
 
-.wplug-slider-table {
+.wplug-keyvis-table {
 	width: 100%;
 
 	display       : flex;
@@ -24,18 +24,18 @@
 }
 
 @media screen and (min-width: 850px) {
-	.wplug-slider-admin.hero {
-		.wplug-slider-table {
+	.wplug-keyvis-admin.hero {
+		.wplug-keyvis-table {
 			flex-direction: row;
 			flex-wrap     : wrap;
 		}
-		.wplug-slider-thumbnail {
+		.wplug-keyvis-thumbnail {
 			min-width: 140px;
 		}
 	}
 }
 
-.wplug-slider-add-row {
+.wplug-keyvis-add-row {
 	display    : flex;
 	flex-wrap  : wrap;
 	align-items: center;
@@ -61,7 +61,7 @@
 		gap        : 0.25rem;
 	}
 
-	.wplug-slider-table:not(:empty) + & {
+	.wplug-keyvis-table:not(:empty) + & {
 		margin-top: 1.5em;
 	}
 }
@@ -70,7 +70,7 @@
 // -----------------------------------------------------------------------------
 
 
-.wplug-slider-item {
+.wplug-keyvis-item {
 	display: flex;
 	background-color: rgba(#fff, 0.75);
 
@@ -91,8 +91,8 @@
 	}
 }
 
-.wplug-slider-item-template-img,
-.wplug-slider-item-template-video {
+.wplug-keyvis-item-template-img,
+.wplug-keyvis-item-template-video {
 	display: none;
 }
 
@@ -100,7 +100,7 @@
 // -----------------------------------------------------------------------------
 
 
-.wplug-slider-handle {
+.wplug-keyvis-handle {
 	flex-grow: 1;
 
 	display    : grid;
@@ -112,7 +112,7 @@
 	cursor: move;
 }
 
-.wplug-slider-delete-label {
+.wplug-keyvis-delete-label {
 	white-space: nowrap;
 	color      : #a00;
 	text-align : center;
@@ -120,7 +120,7 @@
 	line-height: 1;
 }
 
-input[type=checkbox].wplug-slider-delete {
+input[type=checkbox].wplug-keyvis-delete {
 	margin-top  : 2px;
 	margin-right: 0;
 }
@@ -129,12 +129,12 @@ input[type=checkbox].wplug-slider-delete {
 // -----------------------------------------------------------------------------
 
 
-.wplug-slider-item-deleted > div:nth-child(2) {
+.wplug-keyvis-item-deleted > div:nth-child(2) {
 	opacity       : 0.5;
 	pointer-events: none;
 }
 
-.wplug-slider-info {
+.wplug-keyvis-info {
 	flex-grow: 1;
 
 	display       : flex;
@@ -147,13 +147,13 @@ input[type=checkbox].wplug-slider-delete {
 	input[type=text] {
 		width: 100%;
 	}
-	.wplug-slider-select-url {
+	.wplug-keyvis-select-url {
 		margin-left  : 4px !important;
 		margin-bottom: 0   !important;
 	}
 }
 
-.wplug-slider-thumbnail-wrap {
+.wplug-keyvis-thumbnail-wrap {
 	display: flex;
 	gap    : 8px;
 
@@ -161,7 +161,7 @@ input[type=checkbox].wplug-slider-delete {
 	max-width: calc(280px + 8px);
 }
 
-.wplug-slider-thumbnail {
+.wplug-keyvis-thumbnail {
 	width    : 100%;
 	max-width: 140px;
 
@@ -241,7 +241,7 @@ input[type=checkbox].wplug-slider-delete {
 	}
 }
 
-.wplug-slider-thumbnail-label {
+.wplug-keyvis-thumbnail-label {
 	position: absolute;
 	left    : 2px;
 	right   : 2px;

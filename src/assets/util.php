@@ -1,40 +1,13 @@
 <?php
 /**
- * Utilities for Slider
+ * Utilities
  *
- * @package Wplug Slider
+ * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-02
+ * @version 2021-08-27
  */
 
-namespace wplug\slider;
-
-function is_post_type( string $post_type ): bool {
-	$post_id = get_post_id();
-	$pt = get_post_type_in_admin( $post_id );
-	return $post_type === $pt;
-}
-
-function get_post_id(): int {
-	$post_id = '';
-	if ( isset( $_GET['post'] ) || isset( $_POST['post_ID'] ) ) {
-		$post_id = isset( $_GET['post'] ) ? $_GET['post'] : $_POST['post_ID'];
-	}
-	return (int) $post_id;
-}
-
-function get_post_type_in_admin( int $post_id ): string {
-	$p = get_post( $post_id );
-	if ( $p === null ) {
-		if ( isset( $_GET['post_type'] ) ) return $_GET['post_type'];
-		return '';
-	}
-	return $p->post_type;
-}
-
-
-// -----------------------------------------------------------------------------
-
+namespace wplug\keyvis;
 
 function get_file_uri( string $path ): string {
 	$path = wp_normalize_path( $path );

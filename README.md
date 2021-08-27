@@ -1,1 +1,1 @@
-# wplug-slider
+# wplug-keyvis

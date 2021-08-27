@@ -1,7 +1,7 @@
-# Translation of Slider - Development in Japanese
-# @package Wplug Slider
+# Translation - Development in Japanese
+# @package Wplug Keyvis
 # @author Takuto Yanagida
-# @version 2021-08-26
+# @version 2021-08-27
 
 # Template Admin ---------------------------------------------------------------
 

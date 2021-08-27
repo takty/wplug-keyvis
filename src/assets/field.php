@@ -2,12 +2,12 @@
 /**
  * Custom Field Utilities
  *
- * @package Wplug Slider
+ * @package Wplug Keyvis
  * @author Takuto Yanagida
  * @version 2021-08-26
  */
 
-namespace wplug\slider;
+namespace wplug\keyvis;
 
 // Multiple Post Meta ----------------------------------------------------------
 

@@ -1,13 +1,13 @@
 <?php
 /**
- * Functions and Definitions for Slider
+ * Functions and Definitions for Keyvis
  *
- * @package Wplug Slider
+ * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-26
+ * @version 2021-08-27
  */
 
-namespace wplug\slider;
+namespace wplug\keyvis;
 
 require_once __DIR__ . '/assets/field.php';
 require_once __DIR__ . '/assets/util.php';
@@ -21,25 +21,25 @@ function initialize( array $args = [] ) {
 function _register_script( string $url_to ) {
 	if ( is_admin() ) {
 		add_action( 'admin_enqueue_scripts', function () use ( $url_to ) {
-			wp_enqueue_script( 'wplug-slider-picker-link',  abs_url( $url_to, './assets/js/picker-link.min.js' ), [ 'wplink', 'jquery-ui-autocomplete' ] );
-			wp_enqueue_script( 'wplug-slider-picker-media', abs_url( $url_to, './assets/js/picker-media.min.js' ), [], 1.0, true );
-			wp_enqueue_script( 'wplug-slider-sortable', abs_url( $url_to, './assets/js/html5sortable.min.js' ) );
-			wp_enqueue_script( 'wplug-slider-template-admin', abs_url( $url_to, './assets/js/template-admin.min.js' ), [ 'wplug-slider-picker-link', 'wplug-slider-picker-media', 'wplug-slider-sortable' ] );
-			wp_enqueue_style( 'wplug-slider-template-admin', abs_url( $url_to, './assets/css/template-admin.min.css' ) );
+			wp_enqueue_script( 'wplug-keyvis-picker-link',  abs_url( $url_to, './assets/js/picker-link.min.js' ), [ 'wplink', 'jquery-ui-autocomplete' ] );
+			wp_enqueue_script( 'wplug-keyvis-picker-media', abs_url( $url_to, './assets/js/picker-media.min.js' ), [], 1.0, true );
+			wp_enqueue_script( 'wplug-keyvis-sortable', abs_url( $url_to, './assets/js/html5sortable.min.js' ) );
+			wp_enqueue_script( 'wplug-keyvis-template-admin', abs_url( $url_to, './assets/js/template-admin.min.js' ), [ 'wplug-keyvis-picker-link', 'wplug-keyvis-picker-media', 'wplug-keyvis-sortable' ] );
+			wp_enqueue_style( 'wplug-keyvis-template-admin', abs_url( $url_to, './assets/css/template-admin.min.css' ) );
 		} );
 	} else {
 		add_action( 'wp_enqueue_scripts', function () use ( $url_to ) {
-			wp_register_script( 'wplug-slider-show', abs_url( $url_to, './assets/js/show.min.js' ) );
-			wp_register_script( 'wplug-slider-hero', abs_url( $url_to, './assets/js/hero.min.js' ) );
-			wp_register_style( 'wplug-slider-show', abs_url( $url_to, './assets/css/show.min.css' ) );
-			wp_register_style( 'wplug-slider-hero', abs_url( $url_to, './assets/css/hero.min.css' ) );
+			wp_register_script( 'wplug-keyvis-show', abs_url( $url_to, './assets/js/show.min.js' ) );
+			wp_register_script( 'wplug-keyvis-hero', abs_url( $url_to, './assets/js/hero.min.js' ) );
+			wp_register_style( 'wplug-keyvis-show', abs_url( $url_to, './assets/css/show.min.css' ) );
+			wp_register_style( 'wplug-keyvis-hero', abs_url( $url_to, './assets/css/hero.min.css' ) );
 		} );
 	}
 }
 
 function _set_default_args( array $args ): array {
-	$args['id']        = $args['id']        ?? 'slider-show';
-	$args['key']       = $args['key']       ?? '_slider_show';
+	$args['id']        = $args['id']        ?? 'keyvis';
+	$args['key']       = $args['key']       ?? '_keyvis';
 	$args['class']     = $args['class']     ?? '';
 	$args['view_size'] = $args['view_size'] ?? '96rem';
 
@@ -100,8 +100,8 @@ function save_meta_box_hero( array $args, int $post_id ) {
 
 
 function the_show( array $args, ?int $post_id = null ): bool {
-	wp_enqueue_style( 'wplug-slider-show' );
-	wp_enqueue_script( 'wplug-slider-show' );
+	wp_enqueue_style( 'wplug-keyvis-show' );
+	wp_enqueue_script( 'wplug-keyvis-show' );
 
 	$post = get_post( $post_id );
 	if ( null === $post ) return false;
@@ -135,13 +135,13 @@ function the_show( array $args, ?int $post_id = null ): bool {
 	</section>
 <?php
 	$opts_str = _create_option_str( $args, $opts );
-	wp_add_inline_script( 'wplug-slider-show', "GIDA.slider_show('$dom_id', $opts_str);" );
+	wp_add_inline_script( 'wplug-keyvis-show', "GIDA.slider_show('$dom_id', $opts_str);" );
 	return true;
 }
 
 function the_hero( array $args, ?int $post_id = null ): bool {
-	wp_enqueue_style( 'wplug-slider-hero' );
-	wp_enqueue_script( 'wplug-slider-hero' );
+	wp_enqueue_style( 'wplug-keyvis-hero' );
+	wp_enqueue_script( 'wplug-keyvis-hero' );
 
 	$post = get_post( $post_id );
 	if ( null === $post ) return false;
@@ -171,7 +171,7 @@ function the_hero( array $args, ?int $post_id = null ): bool {
 	</section>
 <?php
 	$opts_str = _create_option_str( $args, $opts );
-	wp_add_inline_script( 'wplug-slider-hero', "GIDA.slider_hero('$dom_id', $opts_str);" );
+	wp_add_inline_script( 'wplug-keyvis-hero', "GIDA.slider_hero('$dom_id', $opts_str);" );
 	return true;
 }
 
