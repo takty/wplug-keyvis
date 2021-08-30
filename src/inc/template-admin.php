@@ -4,11 +4,21 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-27
+ * @version 2021-08-30
  */
 
 namespace wplug\keyvis;
 
+/**
+ * Adds the meta box to template admin screen.
+ *
+ * @param bool    $is_show  Whether this slider is 'show'.
+ * @param array   $args     Array of arguments.
+ * @param string  $title    Title of the meta box.
+ * @param ?string $screen   (Optional) The screen or screens on which to show the box.
+ * @param string  $context  (Optional) The context within the screen where the box should display.
+ * @param string  $priority (Optional) The priority within the context where the box should show.
+ */
 function add_meta_box_template_admin( bool $is_show, array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
 	$args = _set_default_args( $args );
 	\add_meta_box(
@@ -22,10 +32,21 @@ function add_meta_box_template_admin( bool $is_show, array $args, string $title,
 	);
 }
 
+/**
+ * Stores the data of the meta box on template admin screen.
+ *
+ * @param bool  $is_show Whether this slider is 'show'.
+ * @param array $args    Array of arguments.
+ * @param int   $post_id Post ID.
+ */
 function save_meta_box_template_admin( bool $is_show, array $args, int $post_id ) {
 	$args = _set_default_args( $args );
-	if ( ! isset( $_POST["{$args['key']}_nonce"] ) ) return;
-	if ( ! wp_verify_nonce( $_POST["{$args['key']}_nonce"], $args['key'] ) ) return;
+	if ( ! isset( $_POST[ "{$args['key']}_nonce" ] ) ) {
+		return;
+	}
+	if ( ! wp_verify_nonce( sanitize_key( $_POST[ "{$args['key']}_nonce" ] ), $args['key'] ) ) {
+		return;
+	}
 	_save_data( $is_show, $args, $post_id );
 }
 
@@ -33,62 +54,84 @@ function save_meta_box_template_admin( bool $is_show, array $args, int $post_id 
 // -----------------------------------------------------------------------------
 
 
+/**
+ * Callback function for 'add_meta_box'.
+ *
+ * @access private
+ *
+ * @param bool     $is_show Whether this slider is 'show'.
+ * @param array    $args    Array of arguments.
+ * @param \WP_Post $post    Post ID.
+ */
 function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $post ) {
-	wp_nonce_field( $args['key'], "{$args['key']}_nonce" );
-	[ $its, $opts ] = _get_data( $is_show, $args, $post->ID );
+	wp_nonce_field( $args['key'], " {$args['key']}_nonce " );
+	list( $its, $opts ) = _get_data( $is_show, $args, $post->ID );
 
-	$is_shuffled = $opts['is_shuffled'] ?? $args['is_shuffled'];
+	$do_shuffle  = $opts['do_shuffle'] ?? $args['do_shuffle'];
 	$effect_type = $opts['effect_type'] ?? $args['effect_type'];
 
+	$key = $args['key'];
 	?>
-	<div class="wplug-keyvis-admin <?php echo $is_show ? 'show' : 'hero'; ?>" data-key="<?php echo $args['key']; ?>">
+	<div class="wplug-keyvis-admin <?php echo esc_attr( $is_show ? 'show' : 'hero' ); ?>" data-key="<?php echo esc_attr( $args['key'] ); ?>">
 		<div class="wplug-keyvis-body">
 	<?php
-	_output_item_image( $is_show, $args, '', [], 'wplug-keyvis-item-template-img', $args['is_dual'] );
-	_output_item_video( $is_show, $args, '', [], 'wplug-keyvis-item-template-video' );
+	_output_item_image( $is_show, $args, '', array(), 'wplug-keyvis-item-template-img', $args['dual'] );
+	_output_item_video( $is_show, $args, '', array(), 'wplug-keyvis-item-template-video' );
 	?>
 	<?php if ( 0 === count( $its ) ) : ?>
 			<div class="wplug-keyvis-table"></div>
 	<?php else : ?>
 			<div class="wplug-keyvis-table">
-<?php
-	foreach ( $its as $idx => $it ) {
-		if ( $it['type'] === 'image' ) {
-			_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item', $args['is_dual'] );
-		} else if ( $it['type'] === 'video' ) {
-			_output_item_video( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
+		<?php
+		foreach ( $its as $idx => $it ) {
+			if ( 'image' === $it['type'] ) {
+				_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item', $args['dual'] );
+			} elseif ( 'video' === $it['type'] ) {
+				_output_item_video( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
+			}
 		}
-	}
-?>
+		?>
 			</div>
 	<?php endif; ?>
 			<div class="wplug-keyvis-add-row">
 				<div>
 					<label class="select">
-						<?php _e( 'Effect Type', 'wplug_keyvis' ) ?>
-						<select name="<?php echo $args['key']; ?>_effect_type">
-							<option value="fade"<?php selected( $effect_type, 'fade' ); ?>><?php _e( 'Fade', 'wplug_keyvis' ) ?></option>
-							<option value="slide"<?php selected( $effect_type, 'slide' ); ?>><?php _e( 'Slide', 'wplug_keyvis' ) ?></option>
-							<option value="scroll"<?php selected( $effect_type, 'scroll' ); ?>><?php _e( 'Scroll', 'wplug_keyvis' ) ?></option>
+						<?php esc_html_e( 'Effect Type', 'wplug_keyvis' ); ?>
+						<select name="<?php echo esc_attr( $key ); ?>_effect_type">
+							<option value="fade"<?php selected( $effect_type, 'fade' ); ?>><?php esc_html_e( 'Fade', 'wplug_keyvis' ); ?></option>
+							<option value="slide"<?php selected( $effect_type, 'slide' ); ?>><?php esc_html_e( 'Slide', 'wplug_keyvis' ); ?></option>
+							<option value="scroll"<?php selected( $effect_type, 'scroll' ); ?>><?php esc_html_e( 'Scroll', 'wplug_keyvis' ); ?></option>
 						</select>
 					</label>
-					<label><input type="checkbox" value="1" name="<?php echo $args['key']; ?>_is_shuffled"<?php echo $is_shuffled ? 'checked' : ''; ?>><?php _e( 'Shuffled', 'wplug_keyvis' ) ?></label>
+					<label><input type="checkbox" value="1" name="<?php echo esc_attr( $key ); ?>_do_shuffle"<?php echo $do_shuffle ? 'checked' : ''; ?>><?php esc_html_e( 'Shuffled', 'wplug_keyvis' ); ?></label>
 				</div>
 				<div>
-	<?php if ( $args['is_video_enabled'] ) : ?>
-					<button type="button" class="wplug-keyvis-add-video button"><?php _e( 'Add Video', 'wplug_keyvis' ) ?></button>
+	<?php if ( $args['do_enable_video'] ) : ?>
+					<button type="button" class="wplug-keyvis-add-video button"><?php esc_html_e( 'Add Video', 'wplug_keyvis' ); ?></button>
 	<?php endif; ?>
-					<button type="button" class="wplug-keyvis-add-img button"><?php _e( 'Add Images', 'wplug_keyvis' ) ?></button>
+					<button type="button" class="wplug-keyvis-add-img button"><?php esc_html_e( 'Add Images', 'wplug_keyvis' ); ?></button>
 				</div>
 			</div>
 		</div>
 	</div>
-<?php
+	<?php
 }
 
-function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls, bool $is_dual ) {
+/**
+ * Outputs the row of an image item.
+ *
+ * @access private
+ *
+ * @param bool   $is_show Whether this slider is 'show'.
+ * @param array  $args    Array of arguments.
+ * @param string $key     The base key of input.
+ * @param array  $it      The item.
+ * @param string $cls     CSS class name.
+ * @param bool   $dual    Whether this item has dual images.
+ */
+function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls, bool $dual ) {
 	_output_row_common( $is_show, $args, $key, $it, $cls );
-	if ( $is_dual ) {
+	if ( $dual ) {
 		echo '<div class="wplug-keyvis-thumbnail-wrap">';
 		_output_row_tn( $key, $it, '' );
 		_output_row_tn( $key, $it, '_sub' );
@@ -96,90 +139,125 @@ function _output_item_image( bool $is_show, array $args, string $key, array $it,
 	} else {
 		_output_row_tn( $key, $it, '' );
 	}
-?>
+	?>
 		</div>
-		<input type="hidden" name="<?php echo $key; ?>[type]"  class="wplug-keyvis-type"  value="<?php echo empty( $it ) ? 'template' : 'image'; ?>">
+		<input type="hidden" name="<?php echo esc_attr( $key ); ?>[type]"  class="wplug-keyvis-type"  value="<?php echo empty( $it ) ? 'template' : 'image'; ?>">
 	</div>
-<?php
+	<?php
 }
 
+/**
+ * Outputs the thumbnail row of image items.
+ *
+ * @access private
+ *
+ * @param string $key     The base key of input.
+ * @param array  $it      The item.
+ * @param string $name_pf Input name postfix.
+ */
 function _output_row_tn( string $key, array $it, string $name_pf ) {
-	$_media = esc_attr( $it["media$name_pf"]    ?? '' );
-	$_title = esc_attr( $it["title$name_pf"]    ?? '' );
-	$_fn    = esc_attr( $it["filename$name_pf"] ?? '' );
-	$img    = $it["img_tag$name_pf"] ?? '';
+	$media = esc_attr( $it[ "media$name_pf" ] ?? '' );
+	$title = $it[ "title$name_pf" ] ?? '';
+	$fn    = $it[ "filename$name_pf" ] ?? '';
+	$img   = $it[ "img_tag$name_pf" ] ?? '';
 
-	if ( ! empty( $_title ) && strlen( $_title ) < strlen( $_fn ) && strpos( $_fn, $_title ) === 0 ) $_title = '';
-?>
+	if ( ! empty( $title ) && strlen( $title ) < strlen( $fn ) && strpos( $fn, $title ) === 0 ) {
+		$title = '';
+	}
+	?>
 				<div class="wplug-keyvis-thumbnail">
-					<a href="javascript:void(0);" class="frame wplug-keyvis-select-media" title="<?php echo "$_title&#x0A;$_fn" ?>">
-						<?php echo $img; ?>
+					<a href="javascript:void(0);" class="frame wplug-keyvis-select-media" title="<?php echo esc_attr( "$title&#x0A;$fn" ); ?>">
+						<?php echo $img; // phpcs:ignore ?>
 						<div class="wplug-keyvis-thumbnail-media"></div>
 					</a>
 					<div class="wplug-keyvis-thumbnail-label">
-						<div class="wplug-keyvis-title"><?php echo $_title ?></div>
-						<div class="wplug-keyvis-filename"><?php echo $_fn ?></div>
+						<div class="wplug-keyvis-title"><?php echo esc_html( $title ); ?></div>
+						<div class="wplug-keyvis-filename"><?php echo esc_html( $fn ); ?></div>
 					</div>
-					<input type="hidden" name="<?php echo $key; ?>[media<?php echo $name_pf; ?>]" class="wplug-keyvis-media" value="<?php echo $_media ?>">
+					<input type="hidden" name="<?php echo esc_attr( $key ); ?>[media<?php echo esc_attr( $name_pf ); ?>]" class="wplug-keyvis-media" value="<?php echo esc_attr( $media ); ?>">
 				</div>
-<?php
+	<?php
 }
 
+/**
+ * Outputs the row of a video item.
+ *
+ * @access private
+ *
+ * @param bool   $is_show Whether this slider is 'show'.
+ * @param array  $args    Array of arguments.
+ * @param string $key     The base key of input.
+ * @param array  $it      The item.
+ * @param string $cls     CSS class name.
+ */
 function _output_item_video( bool $is_show, array $args, string $key, array $it, string $cls ) {
-	$_media = esc_attr( $it['media']    ?? '' );
-	$_title = esc_attr( $it['title']    ?? '' );
-	$_fn    = esc_attr( $it['filename'] ?? '' );
-	$_video = esc_url( $it['video']     ?? '' );
+	$media = $it['media'] ?? '';
+	$title = $it['title'] ?? '';
+	$fn    = $it['filename'] ?? '';
+	$video = $it['video'] ?? '';
 
-	if ( ! empty( $_title ) && strlen( $_title ) < strlen( $_fn ) && strpos( $_fn, $_title ) === 0 ) $_title = '';
+	if ( ! empty( $title ) && strlen( $title ) < strlen( $fn ) && strpos( $fn, $title ) === 0 ) {
+		$title = '';
+	}
 	_output_row_common( $is_show, $args, $key, $it, $cls );
-?>
+	?>
 			<div class="wplug-keyvis-thumbnail">
-				<a href="javascript:void(0);" class="frame wplug-keyvis-select-media" title="<?php echo "$_title&#x0A;$_fn" ?>">
-					<video class="wplug-keyvis-thumbnail-media" src="<?php echo $_video ?>">
+				<a href="javascript:void(0);" class="frame wplug-keyvis-select-media" title="<?php echo esc_attr( "$title&#x0A;$fn" ); ?>">
+					<video class="wplug-keyvis-thumbnail-media" src="<?php echo esc_url( $video ); ?>">
 				</a>
 				<div class="wplug-keyvis-thumbnail-label">
-					<div class="wplug-keyvis-title"><?php echo $_title ?></div>
-					<div class="wplug-keyvis-filename"><?php echo $_fn ?></div>
+					<div class="wplug-keyvis-title"><?php echo esc_attr( $title ); ?></div>
+					<div class="wplug-keyvis-filename"><?php echo esc_attr( $fn ); ?></div>
 				</div>
-				<input type="hidden" name="<?php echo $key; ?>[media]" class="wplug-keyvis-media" value="<?php echo $_media ?>">
+				<input type="hidden" name="<?php echo esc_attr( $key ); ?>[media]" class="wplug-keyvis-media" value="<?php echo esc_attr( $media ); ?>">
 			</div>
 		</div>
-		<input type="hidden" name="<?php echo $key; ?>[type]"  class="wplug-keyvis-type"  value="<?php echo empty( $it ) ? 'template' : 'video'; ?>">
+		<input type="hidden" name="<?php echo esc_attr( $key ); ?>[type]"  class="wplug-keyvis-type"  value="<?php echo empty( $it ) ? 'template' : 'video'; ?>">
 	</div>
-<?php
+	<?php
 }
 
+/**
+ * Outputs the common row of items.
+ *
+ * @access private
+ *
+ * @param bool   $is_show Whether this slider is 'show'.
+ * @param array  $args    Array of arguments.
+ * @param string $key     The base key of input.
+ * @param array  $it      The item.
+ * @param string $cls     CSS class name.
+ */
 function _output_row_common( bool $is_show, array $args, string $key, array $it, string $cls ) {
-	$_cap = esc_attr( $it['caption'] ?? '' );
-	$_url = esc_attr( $it['url']     ?? '' );
+	$cap = $it['caption'] ?? '';
+	$url = $it['url'] ?? '';
 
 	$cap_type = $it['caption_type'] ?? $args['caption_type'];
-?>
-	<div class="<?php echo $cls ?>">
+	?>
+	<div class="<?php echo esc_attr( $cls ); ?>">
 		<div>
 			<div class="wplug-keyvis-handle">=</div>
-			<label class="widget-control-remove wplug-keyvis-delete-label"><?php _e( 'Remove', 'wplug_keyvis' ) ?><br>
-			<input type="checkbox" name="<?php echo $key; ?>[delete]" class="wplug-keyvis-delete" value="1"></label>
+			<label class="widget-control-remove wplug-keyvis-delete-label"><?php esc_html_e( 'Remove', 'wplug_keyvis' ); ?><br>
+			<input type="checkbox" name="<?php echo esc_attr( $key ); ?>[delete]" class="wplug-keyvis-delete" value="1"></label>
 		</div>
 		<div>
-<?php if ( $is_show ) : ?>
+	<?php if ( $is_show ) : ?>
 			<div class="wplug-keyvis-info">
-				<div><?php esc_html_e( 'Caption', 'wplug_keyvis' ) ?>:</div>
+				<div><?php esc_html_e( 'Caption', 'wplug_keyvis' ); ?>:</div>
 				<div>
-					<input type="text" name="<?php echo $key; ?>[caption]" class="wplug-keyvis-caption" value="<?php echo $_cap ?>">
-					<select name="<?php echo $key; ?>[caption_type]">
-						<option value="line"<?php selected( $cap_type, 'line' ); ?>><?php _e( 'Line', 'wplug_keyvis' ) ?></option>
-						<option value="circle"<?php selected( $cap_type, 'circle' ); ?>><?php _e( 'Circle', 'wplug_keyvis' ) ?></option>
-						<option value="subtitle"<?php selected( $cap_type, 'subtitle' ); ?>><?php _e( 'Subtitle', 'wplug_keyvis' ) ?></option>
+					<input type="text" name="<?php echo esc_attr( $key ); ?>[caption]" class="wplug-keyvis-caption" value="<?php echo esc_attr( $cap ); ?>">
+					<select name="<?php echo esc_attr( $key ); ?>[caption_type]">
+						<option value="line"<?php selected( $cap_type, 'line' ); ?>><?php esc_html_e( 'Line', 'wplug_keyvis' ); ?></option>
+						<option value="circle"<?php selected( $cap_type, 'circle' ); ?>><?php esc_html_e( 'Circle', 'wplug_keyvis' ); ?></option>
+						<option value="subtitle"<?php selected( $cap_type, 'subtitle' ); ?>><?php esc_html_e( 'Subtitle', 'wplug_keyvis' ); ?></option>
 					</select>
 				</div>
 				<div><a href="javascript:void(0);" class="wplug-keyvis-url-opener">URL</a>:</div>
 				<div>
-					<input type="text" name="<?php echo $key; ?>[url]" class="wplug-keyvis-url" value="<?php echo $_url ?>">
-					<button type="button" class="button wplug-keyvis-select-url"><?php _e( 'Select', 'wplug_keyvis' ) ?></button>
+					<input type="text" name="<?php echo esc_attr( $key ); ?>[url]" class="wplug-keyvis-url" value="<?php echo esc_attr( $url ); ?>">
+					<button type="button" class="button wplug-keyvis-select-url"><?php esc_html_e( 'Select', 'wplug_keyvis' ); ?></button>
 				</div>
 			</div>
-<?php endif; ?>
-<?php
+	<?php endif; ?>
+	<?php
 }

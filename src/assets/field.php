@@ -4,47 +4,64 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-26
+ * @version 2021-08-30
  */
 
 namespace wplug\keyvis;
 
-// Multiple Post Meta ----------------------------------------------------------
-
-
+/**
+ * Gets multiple post meta from environ variable $_POST.
+ *
+ * @param string $base_key The base key of variable names.
+ * @param array  $keys     The keys of variable names.
+ * @return array The meta values.
+ */
 function get_multiple_post_meta_from_env( string $base_key, array $keys ): array {
-	$ret = [];
+	$ret = array();
 
-	// {$base_key}_{n}_{$key} (for backward compatibility)
-	if ( isset( $_POST[ $base_key ] ) && is_numeric( $_POST[ $base_key ] ) ) {
-		$count = (int) ( $_POST[ $base_key ] ?? 0 );
+	// For backward compatibility (Input variable structure: {$base_key}_{n}_{$key}).
+	if ( isset( $_POST[ $base_key ] ) && is_numeric( $_POST[ $base_key ] ) ) {  // phpcs:ignore
+		$count = (int) sanitize_text_field( wp_unslash( $_POST[ $base_key ] ) );  // phpcs:ignore
 
-		for ( $i = 0; $i < $count; $i += 1 ) {
-			$it  = [];
+		for ( $i = 0; $i < $count; ++$i ) {
+			$it = array();
 			foreach ( $keys as $key ) {
-				$it[ $key ] = $_POST["{$base_key}_{$i}_{$key}"] ?? null;
+				$k = "{$base_key}_{$i}_{$key}";
+				$v = null;
+				if ( isset( $_POST[ $k ] ) ) {  // phpcs:ignore
+					$v = wp_unslash( $_POST[ $k ] );  // phpcs:ignore
+				}
+				$it[ $key ] = $v;
 			}
 			$ret[] = $it;
 		}
 		return $ret;
 	}
-	// {$base_key}_{$key}[n] (Next best plan)
-	if ( ! isset( $_POST[ $base_key ] ) ) {
-		$count = count( $_POST[ "{$base_key}_{$keys[0]}" ] );
+	// Next best plan (Input variable structure: {$base_key}_{$key}[n]).
+	if ( ! isset( $_POST[ $base_key ] ) ) {  // phpcs:ignore
+		$count = 0;
+		if ( isset( $_POST[ "{$base_key}_{$keys[0]}" ] ) ) {  // phpcs:ignore
+			$count = count( $_POST[ "{$base_key}_{$keys[0]}" ] );  // phpcs:ignore
+		}
 
-		for ( $i = 0; $i < $count; $i += 1 ) {
-			$it = [];
+		for ( $i = 0; $i < $count; ++$i ) {
+			$it = array();
 			foreach ( $keys as $key ) {
-				$it[ $key ] = $_POST["{$base_key}_{$key}"][ $i ] ?? null;
+				$k          = "{$base_key}_{$key}";
+				$it[ $key ] = null;
+				if ( isset( $_POST[ $k ][ $i ] ) ) {  // phpcs:ignore
+					$it[ $key ] = wp_unslash( $_POST[ $k ][ $i ] );  // phpcs:ignore
+				}
 			}
 			$ret[] = $it;
 		}
 		return $ret;
 	}
-	// {$base_key}[n][{$key}] (Best plan)
-	if ( isset( $_POST[ $base_key ] ) && is_array( $_POST[ $base_key ] ) ) {
-		foreach ( $_POST[ $base_key ] as $val ) {
-			$it = [];
+	// Best plan (Input variable structure: {$base_key}[n][{$key}]).
+	if ( isset( $_POST[ $base_key ] ) && is_array( $_POST[ $base_key ] ) ) {  // phpcs:ignore
+		$vals = wp_unslash( $_POST[ $base_key ] );  // phpcs:ignore
+		foreach ( $vals as $val ) {
+			$it = array();
 			foreach ( $keys as $key ) {
 				$it[ $key ] = $val[ $key ] ?? null;
 			}
@@ -52,27 +69,36 @@ function get_multiple_post_meta_from_env( string $base_key, array $keys ): array
 		}
 		return $ret;
 	}
-	return [];
+	return array();
 }
 
 
 // -----------------------------------------------------------------------------
 
 
+/**
+ * Gets multiple post meta values.
+ *
+ * @param int     $post_id     The post ID.
+ * @param string  $base_key    The base key of variable names.
+ * @param array   $keys        The keys of variable names.
+ * @param ?string $special_key (Optional) The special key.
+ * @return array The meta values.
+ */
 function get_multiple_post_meta( int $post_id, string $base_key, array $keys, ?string $special_key = null ): array {
-	$ret = [];
+	$ret = array();
 	$val = get_post_meta( $post_id, $base_key, true );
 
-	if ( is_numeric( $val ) ) {  // for backward compatibility
+	if ( is_numeric( $val ) ) {  // For backward compatibility.
 		$count = (int) $val;
-		for ( $i = 0; $i < $count; $i += 1 ) {
-			$it = [];
+		for ( $i = 0; $i < $count; ++$i ) {
+			$it = array();
 			foreach ( $keys as $key ) {
 				$it[ $key ] = get_post_meta( $post_id, "{$base_key}_{$i}_{$key}", true );
 			}
 			$ret[] = $it;
 		}
-	} else if ( $special_key ) {
+	} elseif ( $special_key ) {
 		$skv = null;
 		$ret = json_decode( $val, true );
 		if ( is_array( $ret ) ) {
@@ -81,27 +107,38 @@ function get_multiple_post_meta( int $post_id, string $base_key, array $keys, ?s
 				$ret = $ret['#'];
 			}
 		} else {
-			$ret = [];
+			$ret = array();
 		}
 		$ret[ $special_key ] = $skv;
 	} else {
 		$ret = json_decode( $val, true );
-		if ( ! is_array( $ret ) ) $ret = [];
+		if ( ! is_array( $ret ) ) {
+			$ret = array();
+		}
 	}
 	return $ret;
 }
 
+/**
+ * Updates multiple post meta values.
+ *
+ * @param int     $post_id     The post ID.
+ * @param string  $base_key    The base key of variable names.
+ * @param array   $vals        The values.
+ * @param array   $keys        The keys of variable names.
+ * @param ?string $special_key (Optional) The special key.
+ */
 function update_multiple_post_meta( int $post_id, string $base_key, array $vals, ?array $keys = null, ?string $special_key = null ) {
 	$val = get_post_meta( $post_id, $base_key, true );
 
-	// Remove old style data
+	// Remove old style data.
 	if ( is_numeric( $val ) ) {
 		$count = count( $vals );
 		if ( null === $keys && 0 < $count ) {
 			$keys = array_keys( reset( $vals ) );
 		}
 		$old_count = (int) $val;
-		for ( $i = 0; $i < $old_count; $i += 1 ) {
+		for ( $i = 0; $i < $old_count; ++$i ) {
 			foreach ( $keys as $key ) {
 				delete_post_meta( $post_id, "{$base_key}_{$i}_{$key}" );
 			}
@@ -110,7 +147,7 @@ function update_multiple_post_meta( int $post_id, string $base_key, array $vals,
 			delete_post_meta( $post_id, $base_key );
 		}
 	}
-	// Update data
+	// Update data.
 	if ( $special_key ) {
 		$skv = $vals[ $special_key ] ?? null;
 		unset( $vals[ $special_key ] );
@@ -119,20 +156,23 @@ function update_multiple_post_meta( int $post_id, string $base_key, array $vals,
 			delete_post_meta( $post_id, $base_key );
 		} else {
 			foreach ( $vals as &$val ) {
-				$it = [];
+				$it = array();
 				foreach ( $keys as $key ) {
 					$it[ $key ] = $val[ $key ];
 				}
 				$val = $it;
 			}
-			$vals = [ '#' => $vals, $special_key => $skv ];
+			$vals = array(
+				'#'          => $vals,
+				$special_key => $skv,
+			);
 		}
 	} else {
 		if ( 0 === count( $vals ) ) {
 			delete_post_meta( $post_id, $base_key );
 		} else {
 			foreach ( $vals as &$val ) {
-				$it = [];
+				$it = array();
 				foreach ( $keys as $key ) {
 					$it[ $key ] = $val[ $key ];
 				}
@@ -140,6 +180,6 @@ function update_multiple_post_meta( int $post_id, string $base_key, array $vals,
 			}
 		}
 	}
-	$json = json_encode( $vals, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+	$json = wp_json_encode( $vals, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 	update_post_meta( $post_id, $base_key, addslashes( $json ) );  // Because the meta value is passed through the stripslashes() function upon being stored.
 }
