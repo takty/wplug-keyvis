@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-30
+ * @version 2021-08-31
  */
 
 namespace wplug\keyvis;
@@ -61,7 +61,7 @@ function save_meta_box_template_admin( bool $is_show, array $args, int $post_id 
  *
  * @param bool     $is_show Whether this slider is 'show'.
  * @param array    $args    Array of arguments.
- * @param \WP_Post $post    Post ID.
+ * @param \WP_Post $post    Current post.
  */
 function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $post ) {
 	wp_nonce_field( $args['key'], " {$args['key']}_nonce " );

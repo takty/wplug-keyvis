@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-27
+ * @version 2021-08-31
  */
 
 namespace wplug\keyvis;
@@ -46,7 +46,7 @@ function get_file_uri( string $path ): string {
  */
 function abs_url( string $base, string $rel ): string {
 	$scheme = wp_parse_url( $rel, PHP_URL_SCHEME );
-	if ( false === $scheme || '' !== $scheme ) {
+	if ( false === $scheme || null !== $scheme ) {
 		return $rel;
 	}
 	$base = trailingslashit( $base );
@@ -154,6 +154,8 @@ function separate_text( string $text ): array {
 
 /**
  * Gets character types.
+ *
+ * @access private
  *
  * @param string $c A character.
  * @return string The character type.

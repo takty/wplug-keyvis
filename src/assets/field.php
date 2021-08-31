@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-30
+ * @version 2021-08-31
  */
 
 namespace wplug\keyvis;
@@ -19,7 +19,7 @@ namespace wplug\keyvis;
 function get_multiple_post_meta_from_env( string $base_key, array $keys ): array {
 	$ret = array();
 
-	// For backward compatibility (Input variable structure: {$base_key}_{n}_{$key}).
+	// #### For backward compatibility: Input variable structure is {$base_key}_{n}_{$key}.
 	if ( isset( $_POST[ $base_key ] ) && is_numeric( $_POST[ $base_key ] ) ) {  // phpcs:ignore
 		$count = (int) sanitize_text_field( wp_unslash( $_POST[ $base_key ] ) );  // phpcs:ignore
 
@@ -37,7 +37,7 @@ function get_multiple_post_meta_from_env( string $base_key, array $keys ): array
 		}
 		return $ret;
 	}
-	// Next best plan (Input variable structure: {$base_key}_{$key}[n]).
+	// #### Next best plan: Input variable structure is {$base_key}_{$key}[n].
 	if ( ! isset( $_POST[ $base_key ] ) ) {  // phpcs:ignore
 		$count = 0;
 		if ( isset( $_POST[ "{$base_key}_{$keys[0]}" ] ) ) {  // phpcs:ignore
@@ -57,7 +57,7 @@ function get_multiple_post_meta_from_env( string $base_key, array $keys ): array
 		}
 		return $ret;
 	}
-	// Best plan (Input variable structure: {$base_key}[n][{$key}]).
+	// #### Best plan: Input variable structure is {$base_key}[n][{$key}].
 	if ( isset( $_POST[ $base_key ] ) && is_array( $_POST[ $base_key ] ) ) {  // phpcs:ignore
 		$vals = wp_unslash( $_POST[ $base_key ] );  // phpcs:ignore
 		foreach ( $vals as $val ) {

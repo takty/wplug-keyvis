@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-30
+ * @version 2021-08-31
  */
 
 namespace wplug\keyvis;
@@ -44,7 +44,7 @@ function initialize( array $args = array() ) {
 }
 
 /**
- * Registers the scripts.
+ * Registers the scripts and styles.
  *
  * @access private
  *
