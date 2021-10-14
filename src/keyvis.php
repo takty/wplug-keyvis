@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-31
+ * @version 2021-10-14
  */
 
 namespace wplug\keyvis;
@@ -442,7 +442,7 @@ function _get_data( bool $is_show, array $args, int $post_id ): array {
 	$post = get_post( $post_id );
 	$its  = get_multiple_post_meta( $post->ID, $args['key'], $sub_keys, 'options' );
 
-	$opts = $its['options'];
+	$opts = $its['options'] ?? array();
 	unset( $its['options'] );
 
 	foreach ( $its as &$it ) {
