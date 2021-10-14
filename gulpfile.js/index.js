@@ -3,30 +3,36 @@
  * Gulpfile
  *
  * @author Takuto Yanagida
- * @version 2021-07-28
+ * @version 2021-10-14
  *
  */
-
 
 'use strict';
 
 const gulp = require('gulp');
 
-const { makeJsTask, makeCssTask, makeSassTask, makeCopyTask, makeModuleTask, makeLocaleTask } = require('./common');
+const { makeJsTask }     = require('./task-js');
+const { makeSassTask }   = require('./task-sass');
+const { makeCopyTask }   = require('./task-copy');
+const { makeLocaleTask } = require('./task-locale');
+const { makeModuleTask } = require('./task-module');
+
+
+// -----------------------------------------------------------------------------
+
 
 const update = makeModuleTask('gida-slider/dist/**/*', './src/assets', 'gida-slider/dist');
 
-const js_raw   = makeJsTask(['src/**/*.js', '!src/**/*.min.js'], './dist', 'src');
-const js_copy  = makeCopyTask('src/**/*.min.js*(.map)', './dist');
-const js       = gulp.parallel(js_raw, js_copy);
+const js_raw  = makeJsTask(['src/**/*.js', '!src/**/*.min.js'], './dist', 'src');
+const js_copy = makeCopyTask('src/**/*.min.js*(.map)', './dist');
+const js      = gulp.parallel(js_raw, js_copy);
 
-const css_raw  = makeCssTask(['src/**/*.css', '!src/**/*.min.css'], './dist', 'src');
 const css_copy = makeCopyTask('src/**/*.min.css*(.map)', './dist');
-const css      = gulp.parallel(css_raw, css_copy);
+const css      = gulp.parallel(css_copy);
 
-const sass     = makeSassTask('src/**/*.scss', './dist');
-const php      = makeCopyTask('src/**/*.php', './dist');
-const locale   = makeLocaleTask('src/languages/**/*.po', './dist', 'src');
+const sass   = makeSassTask('src/**/*.scss', './dist');
+const php    = makeCopyTask('src/**/*.php', './dist');
+const locale = makeLocaleTask('src/languages/**/*.po', './dist', 'src');
 
 const watch = (done) => {
 	gulp.watch('src/**/*.js', js);
