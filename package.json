@@ -1,6 +1,6 @@
 {
 	"name": "wplug-keyvis",
-	"version": "1.21.8",
+	"version": "1.0.0",
 	"description": "A Component of WordPress for Gida Slider",
 	"author": "Takuto Yanagida",
 	"main": "gulpfile.js",
