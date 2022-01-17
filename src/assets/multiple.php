@@ -1,19 +1,19 @@
 <?php
 /**
- * Custom Field Utilities
+ * Multiple Post Meta
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-08-31
+ * @version 2022-01-17
  */
 
 namespace wplug\keyvis;
 
 /**
- * Gets multiple post meta from environ variable $_POST.
+ * Retrieve multiple post meta from environ variable $_POST.
  *
- * @param string $base_key The base key of variable names.
- * @param array  $keys     The keys of variable names.
+ * @param string $base_key Base key of variable names.
+ * @param array  $keys     Keys of variable names.
  * @return array The meta values.
  */
 function get_multiple_post_meta_from_env( string $base_key, array $keys ): array {
@@ -77,12 +77,12 @@ function get_multiple_post_meta_from_env( string $base_key, array $keys ): array
 
 
 /**
- * Gets multiple post meta values.
+ * Retrieve multiple post meta values.
  *
- * @param int     $post_id     The post ID.
- * @param string  $base_key    The base key of variable names.
- * @param array   $keys        The keys of variable names.
- * @param ?string $special_key (Optional) The special key.
+ * @param int         $post_id     Post ID.
+ * @param string      $base_key    Base key of variable names.
+ * @param array       $keys        Keys of variable names.
+ * @param string|null $special_key (Optional) Special key.
  * @return array The meta values.
  */
 function get_multiple_post_meta( int $post_id, string $base_key, array $keys, ?string $special_key = null ): array {
@@ -120,15 +120,15 @@ function get_multiple_post_meta( int $post_id, string $base_key, array $keys, ?s
 }
 
 /**
- * Updates multiple post meta values.
+ * Stores multiple post meta values.
  *
- * @param int     $post_id     The post ID.
- * @param string  $base_key    The base key of variable names.
- * @param array   $vals        The values.
- * @param array   $keys        The keys of variable names.
- * @param ?string $special_key (Optional) The special key.
+ * @param int         $post_id     Post ID.
+ * @param string      $base_key    Base key of variable names.
+ * @param array       $vals        Values.
+ * @param array       $keys        Keys of variable names.
+ * @param string|null $special_key (Optional) Special key.
  */
-function update_multiple_post_meta( int $post_id, string $base_key, array $vals, ?array $keys = null, ?string $special_key = null ) {
+function set_multiple_post_meta( int $post_id, string $base_key, array $vals, ?array $keys = null, ?string $special_key = null ): void {
 	$val = get_post_meta( $post_id, $base_key, true );
 
 	// Remove old style data.
