@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-01-17
+ * @version 2022-01-24
  */
 
 namespace wplug\keyvis;
@@ -19,6 +19,8 @@ require_once __DIR__ . '/inc/template-admin.php';
  *
  * @param array $args {
  *     (Optional) Array of arguments.
+ *
+ *     @type string 'url_to'             Base URL.
  *
  *     @type string 'id'                 The ID of the output markup.
  *     @type string 'key'                The base key of input.

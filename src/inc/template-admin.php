@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2021-10-14
+ * @version 2022-01-24
  */
 
 namespace wplug\keyvis;
@@ -28,7 +28,8 @@ function add_meta_box_template_admin( bool $is_show, array $args, string $title,
 			\wplug\keyvis\_cb_output_html_template_admin( $is_show, $args, $post );
 		},
 		$screen,
-		$context
+		$context,
+		$priority
 	);
 }
 
