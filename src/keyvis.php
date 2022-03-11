@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-01-24
+ * @version 2022-03-11
  */
 
 namespace wplug\keyvis;
@@ -21,6 +21,7 @@ require_once __DIR__ . '/inc/template-admin.php';
  *     (Optional) Array of arguments.
  *
  *     @type string 'url_to'             Base URL.
+ *     @type bool   'do_enqueue_style'   Whether to enqueue styles now.
  *
  *     @type string 'id'                 The ID of the output markup.
  *     @type string 'key'                The base key of input.
@@ -43,7 +44,7 @@ require_once __DIR__ . '/inc/template-admin.php';
  */
 function initialize( array $args = array() ) {
 	$url_to = untrailingslashit( $args['url_to'] ?? get_file_uri( __DIR__ ) );
-	_register_script( $url_to );
+	_register_script( $url_to, $args['do_enqueue_style'] ?? false );
 }
 
 /**
@@ -51,9 +52,10 @@ function initialize( array $args = array() ) {
  *
  * @access private
  *
- * @param string $url_to Base URL.
+ * @param string $url_to           Base URL.
+ * @param bool   $do_enqueue_style Whether to enqueue styles now.
  */
-function _register_script( string $url_to ) {
+function _register_script( string $url_to, bool $do_enqueue_style ) {
 	if ( is_admin() ) {
 		add_action(
 			'admin_enqueue_scripts',
@@ -68,11 +70,16 @@ function _register_script( string $url_to ) {
 	} else {
 		add_action(
 			'wp_enqueue_scripts',
-			function () use ( $url_to ) {
+			function () use ( $url_to, $do_enqueue_style ) {
 				wp_register_script( 'wplug-keyvis-show', abs_url( $url_to, './assets/js/show.min.js' ), array(), '1.0', false );
 				wp_register_script( 'wplug-keyvis-hero', abs_url( $url_to, './assets/js/hero.min.js' ), array(), '1.0', false );
 				wp_register_style( 'wplug-keyvis-show', abs_url( $url_to, './assets/css/show.min.css' ), array(), '1.0' );
 				wp_register_style( 'wplug-keyvis-hero', abs_url( $url_to, './assets/css/hero.min.css' ), array(), '1.0' );
+
+				if ( $do_enqueue_style ) {
+					wp_enqueue_style( 'wplug-keyvis-show' );
+					wp_enqueue_style( 'wplug-keyvis-hero' );
+				}
 			}
 		);
 	}
