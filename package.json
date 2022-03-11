@@ -24,9 +24,9 @@
 		"not dead"
 	],
 	"dependencies": {
-		"@babel/core": "^7.16.7",
-		"@babel/preset-env": "^7.16.7",
-		"gettext-parser": "^4.2.0",
+		"@babel/core": "^7.17.5",
+		"@babel/preset-env": "^7.16.11",
+		"gettext-parser": "^5.1.0",
 		"gida-slider": "git+https://github.com/takty/gida-slider.git#v1",
 		"gulp": "^4.0.2",
 		"gulp-autoprefixer": "^8.0.0",
@@ -39,6 +39,6 @@
 		"gulp-rename": "^2.0.0",
 		"gulp-sass": "^5.1.0",
 		"gulp-terser": "^2.1.0",
-		"sass": "^1.46.0"
+		"sass": "^1.49.9"
 	}
 }
