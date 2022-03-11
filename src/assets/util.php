@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-01-17
+ * @version 2022-02-21
  */
 
 namespace wplug\keyvis;
@@ -18,7 +18,7 @@ namespace wplug\keyvis;
 function separate_line( string $str ): array {
 	return array_map(
 		function ( $s ) {
-			return \st\separate_text_and_make_spans( $s );
+			return separate_text_and_make_spans( $s );
 		},
 		preg_split( '/　　|<\s*br\s*\/?>/ui', $str )
 	);
