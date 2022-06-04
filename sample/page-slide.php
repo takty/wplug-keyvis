@@ -1,15 +1,13 @@
 <?php
 /**
+ * The Template for Static Pages with Slide Show
  *
- * The Template for Publication Static Pages
+ * Template Name: Slide Show
  *
- * Template Name: Publication List
- *
+ * @package Theme
  * @author Takuto Yanagida
- * @version 2021-07-26
- *
+ * @version 2022-06-04
  */
-
 
 get_header();
 ?>
@@ -17,7 +15,8 @@ get_header();
 		<main id="main" class="site-main" role="main">
 
 <?php
-while ( have_posts() ) : the_post();
+while ( have_posts() ) :
+	the_post();
 	get_template_part( 'template-parts/entry', 'page' );
 endwhile;
 ?>
