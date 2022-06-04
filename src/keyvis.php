@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-03-11
+ * @version 2022-06-04
  */
 
 namespace wplug\keyvis;
@@ -20,25 +20,29 @@ require_once __DIR__ . '/inc/template-admin.php';
  * @param array $args {
  *     (Optional) Array of arguments.
  *
- *     @type string 'url_to'             Base URL.
+ *     @type string 'url_to'                      Base URL.
  *
- *     @type string 'id'                 The ID of the output markup.
- *     @type string 'key'                The base key of input.
- *     @type string 'class'              CSS class name.
- *     @type string 'view_size'          The width of view.
+ *     @type string 'id'                          The ID of the output markup.
+ *     @type string 'key'                         The base key of input.
+ *     @type string 'class'                       CSS class name.
+ *     @type string 'view_size'                   The width of view.
  *
- *     @type bool   'dual'               Whether this item has dual images.
- *     @type bool   'do_enable_video'    Whether to enable video slides.
- *     @type bool   'do_scroll_picture'  Whether to scroll images.
- *     @type string 'caption_type'       Caption type ('line', 'circle', or 'subtitle').
- *     @type bool   'do_shuffle'         Whether to shuffle slides.
+ *     @type bool   'dual'                        Whether this item has dual images.
+ *     @type bool   'do_enable_video'             Whether to enable video slides.
+ *     @type bool   'do_scroll_picture'           Whether to scroll images.
+ *     @type string 'caption_type'                Caption type ('line', 'circle', or 'subtitle').
+ *     @type bool   'do_shuffle'                  Whether to shuffle slides.
  *
- *     @type string 'effect_type'        Effect type ('fade', 'slide' or 'scroll').
- *     @type int    'duration_time'      Duration time [s].
- *     @type int    'transition_time'    Transition time [s].
- *     @type bool   'is_random_timing'   Whether changes the transition timing randomly.
- *     @type bool   'background_visible' Whether the background images are visible.
- *     @type bool   'side_slide_visible' Whether the side slides are visible.
+ *     @type string 'effect_type'                 Effect type ('fade', 'slide' or 'scroll').
+ *     @type int    'duration_time'               Duration time [s].
+ *     @type int    'transition_time'             Transition time [s].
+ *     @type bool   'is_random_timing'            Whether changes the transition timing randomly.
+ *     @type bool   'background_visible'          Whether the background images are visible.
+ *     @type bool   'side_slide_visible'          Whether the side slides are visible.
+ *
+ *     @type bool   'do_show_caption_type_option' Whether to show caption type options. Default true.
+ *     @type bool   'do_show_effect_type_option'  Whether to show the effect type option. Default true.
+ *     @type bool   'do_show_shuffle_option'      Whether to show the shuffle option. Default true.
  * }
  */
 function initialize( array $args = array() ) {
@@ -113,6 +117,10 @@ function _set_default_args( array $args ): array {
 	$args['is_random_timing']   = $args['is_random_timing']   ?? false;
 	$args['background_visible'] = $args['background_visible'] ?? true;
 	$args['side_slide_visible'] = $args['side_slide_visible'] ?? false;
+
+	$args['do_show_caption_type_option'] = $args['do_show_caption_type_option'] ?? true;
+	$args['do_show_effect_type_option']  = $args['do_show_effect_type_option']  ?? true;
+	$args['do_show_shuffle_option']      = $args['do_show_shuffle_option']      ?? true;
 	// phpcs:enable
 	return $args;
 }

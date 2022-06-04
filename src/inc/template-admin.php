@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-01-24
+ * @version 2022-06-04
  */
 
 namespace wplug\keyvis;
@@ -76,7 +76,7 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 	<div class="wplug-keyvis-admin <?php echo esc_attr( $is_show ? 'show' : 'hero' ); ?>" data-key="<?php echo esc_attr( $args['key'] ); ?>">
 		<div class="wplug-keyvis-body">
 	<?php
-	_output_item_image( $is_show, $args, '', array(), 'wplug-keyvis-item-template-img', $args['dual'] );
+	_output_item_image( $is_show, $args, '', array(), 'wplug-keyvis-item-template-img' );
 	_output_item_video( $is_show, $args, '', array(), 'wplug-keyvis-item-template-video' );
 	?>
 	<?php if ( 0 === count( $its ) ) : ?>
@@ -86,7 +86,7 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 		<?php
 		foreach ( $its as $idx => $it ) {
 			if ( 'image' === $it['type'] ) {
-				_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item', $args['dual'] );
+				_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
 			} elseif ( 'video' === $it['type'] ) {
 				_output_item_video( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
 			}
@@ -96,6 +96,7 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 	<?php endif; ?>
 			<div class="wplug-keyvis-add-row">
 				<div>
+		<?php if ( $args['do_show_effect_type_option'] ) : ?>
 					<label class="select">
 						<?php esc_html_e( 'Effect Type', 'wplug_keyvis' ); ?>
 						<select name="<?php echo esc_attr( $key ); ?>_effect_type">
@@ -104,7 +105,10 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 							<option value="scroll"<?php selected( $effect_type, 'scroll' ); ?>><?php esc_html_e( 'Scroll', 'wplug_keyvis' ); ?></option>
 						</select>
 					</label>
+		<?php endif; ?>
+		<?php if ( $args['do_show_shuffle_option'] ) : ?>
 					<label><input type="checkbox" value="1" name="<?php echo esc_attr( $key ); ?>_do_shuffle"<?php echo $do_shuffle ? 'checked' : ''; ?>><?php esc_html_e( 'Shuffled', 'wplug_keyvis' ); ?></label>
+		<?php endif; ?>
 				</div>
 				<div>
 	<?php if ( $args['do_enable_video'] ) : ?>
@@ -128,11 +132,10 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
  * @param string $key     The base key of input.
  * @param array  $it      The item.
  * @param string $cls     CSS class name.
- * @param bool   $dual    Whether this item has dual images.
  */
-function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls, bool $dual ) {
+function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls ) {
 	_output_row_common( $is_show, $args, $key, $it, $cls );
-	if ( $dual ) {
+	if ( $args['dual'] ) {
 		echo '<div class="wplug-keyvis-thumbnail-wrap">';
 		_output_row_tn( $key, $it, '' );
 		_output_row_tn( $key, $it, '_sub' );
@@ -247,11 +250,13 @@ function _output_row_common( bool $is_show, array $args, string $key, array $it,
 				<div><?php esc_html_e( 'Caption', 'wplug_keyvis' ); ?>:</div>
 				<div>
 					<input type="text" name="<?php echo esc_attr( $key ); ?>[caption]" class="wplug-keyvis-caption" value="<?php echo esc_attr( $cap ); ?>">
+		<?php if ( $args['do_show_caption_type_option'] ) : ?>
 					<select name="<?php echo esc_attr( $key ); ?>[caption_type]">
 						<option value="line"<?php selected( $cap_type, 'line' ); ?>><?php esc_html_e( 'Line', 'wplug_keyvis' ); ?></option>
 						<option value="circle"<?php selected( $cap_type, 'circle' ); ?>><?php esc_html_e( 'Circle', 'wplug_keyvis' ); ?></option>
 						<option value="subtitle"<?php selected( $cap_type, 'subtitle' ); ?>><?php esc_html_e( 'Subtitle', 'wplug_keyvis' ); ?></option>
 					</select>
+		<?php endif; ?>
 				</div>
 				<div><a href="javascript:void(0);" class="wplug-keyvis-url-opener">URL</a>:</div>
 				<div>
