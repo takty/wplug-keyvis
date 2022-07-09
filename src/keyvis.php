@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-06-04
+ * @version 2022-07-09
  */
 
 namespace wplug\keyvis;
@@ -36,7 +36,7 @@ require_once __DIR__ . '/inc/template-admin.php';
  *     @type string 'effect_type'                 Effect type ('fade', 'slide' or 'scroll').
  *     @type int    'duration_time'               Duration time [s].
  *     @type int    'transition_time'             Transition time [s].
- *     @type bool   'is_random_timing'            Whether changes the transition timing randomly.
+ *     @type bool   'random_timing'               Whether changes the transition timing randomly.
  *     @type bool   'background_visible'          Whether the background images are visible.
  *     @type bool   'side_slide_visible'          Whether the side slides are visible.
  *
@@ -114,7 +114,7 @@ function _set_default_args( array $args ): array {
 	$args['effect_type']        = $args['effect_type']        ?? 'slide';  // 'scroll' or 'fade'
 	$args['duration_time']      = $args['duration_time']      ?? 8;  // [second]
 	$args['transition_time']    = $args['transition_time']    ?? 1;  // [second]
-	$args['is_random_timing']   = $args['is_random_timing']   ?? false;
+	$args['random_timing']      = $args['random_timing']      ?? false;
 	$args['background_visible'] = $args['background_visible'] ?? true;
 	$args['side_slide_visible'] = $args['side_slide_visible'] ?? false;
 
@@ -139,7 +139,7 @@ function _create_option_str( array $args, array $opts ): string {
 		'effect_type'        => $opts['effect_type'] ?? $args['effect_type'],
 		'duration_time'      => $args['duration_time'],
 		'transition_time'    => $args['transition_time'],
-		'is_random_timing'   => $args['is_random_timing'],
+		'random_timing'      => $args['random_timing'],
 		'background_visible' => $args['background_visible'],
 		'side_slide_visible' => $args['side_slide_visible'],
 	);
