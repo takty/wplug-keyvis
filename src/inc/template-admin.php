@@ -12,12 +12,12 @@ namespace wplug\keyvis;
 /**
  * Adds the meta box to template admin screen.
  *
- * @param bool    $is_show  Whether this slider is 'show'.
- * @param array   $args     Array of arguments.
- * @param string  $title    Title of the meta box.
- * @param ?string $screen   (Optional) The screen or screens on which to show the box.
- * @param string  $context  (Optional) The context within the screen where the box should display.
- * @param string  $priority (Optional) The priority within the context where the box should show.
+ * @param bool        $is_show  Whether this slider is 'show'.
+ * @param array       $args     Array of arguments.
+ * @param string      $title    Title of the meta box.
+ * @param string|null $screen   (Optional) The screen or screens on which to show the box.
+ * @param string      $context  (Optional) The context within the screen where the box should display.
+ * @param string      $priority (Optional) The priority within the context where the box should show.
  */
 function add_meta_box_template_admin( bool $is_show, array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
 	$args = _set_default_args( $args );

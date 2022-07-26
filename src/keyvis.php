@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-07-09
+ * @version 2022-07-25
  */
 
 namespace wplug\keyvis;
@@ -153,11 +153,11 @@ function _create_option_str( array $args, array $opts ): string {
 /**
  * Adds the meta box for slider 'show' to template admin screen.
  *
- * @param array   $args     Array of arguments.
- * @param string  $title    Title of the meta box.
- * @param ?string $screen   (Optional) The screen or screens on which to show the box.
- * @param string  $context  (Optional) The context within the screen where the box should display.
- * @param string  $priority (Optional) The priority within the context where the box should show.
+ * @param array       $args     Array of arguments.
+ * @param string      $title    Title of the meta box.
+ * @param string|null $screen   (Optional) The screen or screens on which to show the box.
+ * @param string      $context  (Optional) The context within the screen where the box should display.
+ * @param string      $priority (Optional) The priority within the context where the box should show.
  */
 function add_meta_box_show( array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
 	add_meta_box_template_admin( true, $args, $title, $screen, $context );
@@ -176,11 +176,11 @@ function save_meta_box_show( array $args, int $post_id ) {
 /**
  * Adds the meta box for slider 'hero' to template admin screen.
  *
- * @param array   $args     Array of arguments.
- * @param string  $title    Title of the meta box.
- * @param ?string $screen   (Optional) The screen or screens on which to show the box.
- * @param string  $context  (Optional) The context within the screen where the box should display.
- * @param string  $priority (Optional) The priority within the context where the box should show.
+ * @param array       $args     Array of arguments.
+ * @param string      $title    Title of the meta box.
+ * @param string|null $screen   (Optional) The screen or screens on which to show the box.
+ * @param string      $context  (Optional) The context within the screen where the box should display.
+ * @param string      $priority (Optional) The priority within the context where the box should show.
  */
 function add_meta_box_hero( array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
 	add_meta_box_template_admin( false, $args, $title, $screen, $context );
@@ -203,8 +203,8 @@ function save_meta_box_hero( array $args, int $post_id ) {
 /**
  * Displays the slider 'show'.
  *
- * @param array $args    Array of arguments.
- * @param ?int  $post_id (Optional) Post ID.
+ * @param array    $args    Array of arguments.
+ * @param int|null $post_id (Optional) Post ID.
  * @return bool Whether the slider is shown.
  */
 function the_show( array $args, ?int $post_id = null ): bool {
@@ -253,8 +253,8 @@ function the_show( array $args, ?int $post_id = null ): bool {
 /**
  * Displays the slider 'hero'.
  *
- * @param array $args    Array of arguments.
- * @param ?int  $post_id (Optional) Post ID.
+ * @param array    $args    Array of arguments.
+ * @param int|null $post_id (Optional) Post ID.
  * @return bool Whether the slider is shown.
  */
 function the_hero( array $args, ?int $post_id = null ): bool {
@@ -316,7 +316,7 @@ function _echo_slide_item_img( array $it, string $caption_type, bool $is_show, b
 		$cont  = empty( $_link ) ? $cont : "<a href=\"$_link\">$cont</a>";
 	}
 	$cls = $do_scroll ? ' class="scroll"' : '';
-	echo "<li$do_scroll>$cont</li>\n";  // phpcs:ignore
+	echo "<li$cls>$cont</li>\n";  // phpcs:ignore
 }
 
 /**
