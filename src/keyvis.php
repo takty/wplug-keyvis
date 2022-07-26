@@ -365,6 +365,25 @@ function _create_slide_caption( string $text, string $type ): string {
 
 
 /**
+ * Retrieves the slider items from a post.
+ *
+ * @param array    $args    Array of arguments.
+ * @param int|null $post_id (Optional) Post ID.
+ * @return array Array of slider items.
+ */
+function get_items( array $args, ?int $post_id = null ): array {
+	$post = get_post( $post_id );
+	if ( null === $post ) {
+		return false;
+	}
+	$post_id = $post->ID;
+
+	$args               = _set_default_args( $args );
+	list( $its, $opts ) = _get_data( true, $args, $post_id );
+	return $its;
+}
+
+/**
  * Display the slider 'show' items as thumbnails.
  *
  * @param array $args    Array of arguments.
