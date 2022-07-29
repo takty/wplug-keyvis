@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-07-25
+ * @version 2022-07-29
  */
 
 namespace wplug\keyvis;
@@ -384,12 +384,12 @@ function get_items( array $args, ?int $post_id = null ): array {
 }
 
 /**
- * Display the slider 'show' items as thumbnails.
+ * Displays the slider items as thumbnails.
  *
- * @param array $args    Array of arguments.
- * @param int   $post_id Post ID.
+ * @param array    $args    Array of arguments.
+ * @param int|null $post_id (Optional) Post ID.
  */
-function the_show_items( array $args, ?int $post_id = null ) {
+function the_items( array $args, ?int $post_id = null ) {
 	$post = get_post( $post_id );
 	if ( null === $post ) {
 		return false;
@@ -401,7 +401,7 @@ function the_show_items( array $args, ?int $post_id = null ) {
 	$dom_id             = "{$args['id']}-$post_id";
 
 	foreach ( $its as $idx => $it ) {
-		$event = "GIDA.slider_show_page('$dom_id', $idx);";
+		$event = "GIDA.sliders['$dom_id'].move($idx);";
 		$id    = $dom_id . "-$idx";
 		if ( 'image' === $it['type'] ) {
 			$cont = $it['img_tag'];
@@ -410,7 +410,7 @@ function the_show_items( array $args, ?int $post_id = null ) {
 			$cont   = "<video><source src=\"$_video\"></video>";
 		}
 		?>
-		<li id="<?php echo esc_attr( $id ); ?>"><a href="javascript:void(0)" onclick="<?php echo esc_js( $event ); ?>"><?php echo $cont; // phpcs:ignore ?></a></li>
+		<li id="<?php echo esc_attr( $id ); ?>"><button type="button" onclick="<?php echo esc_js( $event ); ?>"><?php echo $cont; // phpcs:ignore ?></button></li>
 		<?php
 	}
 }
