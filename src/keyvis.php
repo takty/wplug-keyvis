@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-07-29
+ * @version 2023-01-24
  */
 
 namespace wplug\keyvis;
@@ -443,7 +443,7 @@ function _save_data( bool $is_show, array $args, int $post_id ) {
 	$its = array_values( $its );
 
 	foreach ( $its as &$it ) {
-		$pid = url_to_postid( $it['url'] );
+		$pid = url_to_postid( $it['url'] ?? '' );
 		if ( 0 !== $pid ) {
 			$it['url'] = $pid;
 		}
