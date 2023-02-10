@@ -445,10 +445,10 @@ function _save_data( bool $is_show, array $args, int $post_id ) {
 	foreach ( $its as &$it ) {
 		$pid = url_to_postid( $it['url'] ?? '' );
 		if ( 0 !== $pid ) {
-			$it['url'] = $pid;
+			$it['post_id'] = $pid;
 		}
 	}
-	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'caption_type', 'url' ) : array() );
+	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'caption_type', 'url', 'post_id' ) : array() );
 	if ( $args['dual'] ) {
 		$sub_keys[] = 'media_sub';
 	}
@@ -473,7 +473,7 @@ function _save_data( bool $is_show, array $args, int $post_id ) {
  * @param int   $post_id Post ID.
  */
 function _get_data( bool $is_show, array $args, int $post_id ): array {
-	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'caption_type', 'url' ) : array() );
+	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'caption_type', 'url', 'post_id' ) : array() );
 	if ( $args['dual'] ) {
 		$sub_keys[] = 'media_sub';
 	}

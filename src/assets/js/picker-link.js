@@ -3,7 +3,7 @@
  * Link Picker (JS)
  *
  * @author Takuto Yanagida
- * @version 2020-11-19
+ * @version 2023-02-10
  *
  */
 
@@ -19,39 +19,40 @@ const setLinkPicker = (function () {
 
 	function setLinkPicker(elm, cls = false, fn = null, opts = {}) {
 		if (cls === false) cls = 'link';
-		opts = Object.assign({ isInternalOnly: false, isLinkTargetAllowed: false, parentGen: 1, postType: null }, opts);
+		opts = Object.assign({ isInternalOnly: false, isLinkTargetAllowed: false, parentGen: -1, postType: null }, opts);
 
-		elm.addEventListener('click', function (e) {
+		elm.addEventListener('click', e => {
 			if (elm.getAttribute('disabled')) return;
 			e.preventDefault();
-			createLink(function (f) {
-				const parent = getParent(e.target, opts.parentGen);
-				setItem(parent, cls, f);
+			createLink(f => {
+				if (parentGen !== -1) {
+					const p = getParent(e.target, opts.parentGen);
+					if (p) setItem(p, cls, f);
+				}
 				if (fn) fn(e.target, f);
 			}, opts.isInternalOnly, opts.isLinkTargetAllowed, opts.postType);
 		});
 	}
 
-	function getParent(elm, gen) {
-		while (0 < gen-- && elm.parentNode) elm = elm.parentNode;
-		return elm;
+	function getParent(e, gen) {
+		while (0 < gen-- && e.parentNode) e = e.parentNode;
+		return e;
 	}
 
-	function setItem(parent, cls, f) {
-		setValueToCls(parent, cls + '-url', f.url);
-		setValueToCls(parent, cls + '-title', f.title);
-		setValueToCls(parent, cls + '-post-id', '');
+	function setItem(p, cls, f) {
+		setValueToCls(p, `${cls}-url`, f.url);
+		setValueToCls(p, `${cls}-title`, f.title);
+		setValueToCls(p, `${cls}-post-id`, '');
 	}
 
-	function setValueToCls(parent, cls, value) {
-		const elms = parent.getElementsByClassName(cls);
-		for (let i = 0; i < elms.length; i += 1) {
-			if (elms[i] instanceof HTMLInputElement) {
-				elms[i].value = value;
-			} else if (elms[i].tagName === 'A') {
-				elms[i].setAttribute('href', value);
+	function setValueToCls(p, cls, v) {
+		for (const e of Array.from(p.getElementsByClassName(cls))) {
+			if (e instanceof HTMLInputElement) {
+				e.value = v;
+			} else if (e.tagName === 'A') {
+				e.setAttribute('href', v);
 			} else {
-				elms[i].innerText = value;
+				e.innerText = v;
 			}
 		}
 	}
@@ -87,18 +88,33 @@ const setLinkPicker = (function () {
 		jQuery('#wp-link').find('.query-results').on('river-select', onSelect);
 
 		jQuery('#link-options').show();
+		jQuery('#wplink-enter-url').show();
+		jQuery('#wplink-enter-url + div').show();
 		jQuery('#wplink-link-existing-content').show();
 		jQuery('#link-options > .link-target').show();
-		const qrs = document.querySelectorAll('#link-selector .query-results');
-		for (let i = 0; i < qrs.length; i += 1) qrs[i].style.top = '';
 
+		const qrs = document.querySelectorAll('#wp-link .query-results');
+		for (let i = 0; i < qrs.length; i += 1) {
+			qrs[i].style.maxHeight = 'unset';
+		}
+		jQuery('.wp-link-text-field').hide();
+		let optionHeight = 208;
 		if (isInternalOnly) {
-			jQuery('#link-options').hide();
+			jQuery('#wplink-enter-url').hide();
+			jQuery('#wplink-enter-url + div').hide();
 			jQuery('#wplink-link-existing-content').hide();
-			for (let i = 0; i < qrs.length; i += 1) qrs[i].style.top = '48px';
-		} else if (!isLinkTargetAllowed) {
+			optionHeight -= 96;
+		}
+		if (!isLinkTargetAllowed) {
 			jQuery('#link-options > .link-target').hide();
-			for (let i = 0; i < qrs.length; i += 1) qrs[i].style.top = '177px';
+			optionHeight -= 32;
+		}
+		if (isInternalOnly && !isLinkTargetAllowed) {
+			jQuery('#link-options').hide();
+			optionHeight -= 20;
+		}
+		for (let i = 0; i < qrs.length; i += 1) {
+			qrs[i].style.height = `calc(100% - ${optionHeight}px)`;
 		}
 	}
 
@@ -116,8 +132,8 @@ const setLinkPicker = (function () {
 		setTimeout(toFunc, time);
 	}
 
-	let postTypeSpec = null;
-	let lastPostTypeSpec = null;
+	let postTypeSpec              = null;
+	let lastPostTypeSpec          = null;
 	let isPostTypeSpecInitialized = false;
 
 	function setPostTypeSpecification(postType) {

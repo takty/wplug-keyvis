@@ -148,7 +148,7 @@ function wplug_keyvis_show_admin(t) {
 				const url = it.getElementsByClassName(CLS_URL)[0].value;
 				if (url) window.open(url);
 			});
-			setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; });
+			setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; }, { parentGen: 1 });
 		}
 
 		const tns = it.getElementsByClassName(CLS_TN);
@@ -171,7 +171,7 @@ function wplug_keyvis_show_admin(t) {
 				if (is_show) it.getElementsByClassName(CLS_CAP)[0].value = f.caption;
 				tn.getElementsByClassName(CLS_TN_MEDIA)[0].src = f.url;
 				set_item(tn, f);
-			}, { multiple: false, type: 'video', title: STR_SEL });
+			}, { multiple: false, type: 'video', parentGen: 1, title: STR_SEL });
 			const v = tn.getElementsByClassName(CLS_TN_MEDIA)[0];
 			v.loop  = true;
 			v.muted = true;
