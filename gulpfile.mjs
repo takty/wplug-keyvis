@@ -2,7 +2,7 @@
  * Gulpfile
  *
  * @author Takuto Yanagida
- * @version 2022-12-09
+ * @version 2023-03-07
  */
 
 import gulp from 'gulp';
@@ -10,7 +10,6 @@ import gulp from 'gulp';
 import { makeJsTask } from './gulp/task-js.mjs';
 import { makeSassTask } from './gulp/task-sass.mjs';
 import { makeCopyTask } from './gulp/task-copy.mjs';
-import { makeModuleTask } from './gulp/task-module.mjs';
 import { makeLocaleTask }  from './gulp/task-locale.mjs';
 
 const js_raw  = makeJsTask(['src/**/*.js', '!src/**/*.min.js'], './dist', 'src');
@@ -33,6 +32,10 @@ const watch = done => {
 	done();
 };
 
-export const update = makeModuleTask('gida-slider/dist/**/*', './src/assets', 'gida-slider/dist');
+export const update = async done => {
+	const { makeModuleTask } = await import('./gulp/task-module.mjs');
+	makeModuleTask('gida-slider/dist/**/*', './src/assets', 'gida-slider/dist')();
+	done();
+};
 export const build  = gulp.parallel(js, css, sass, php, locale);
 export default gulp.series(build, watch);
