@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2023-01-24
+ * @version 2023-06-20
  */
 
 namespace wplug\keyvis;
@@ -429,7 +429,10 @@ function the_items( array $args, ?int $post_id = null ) {
  * @param int   $post_id Post ID.
  */
 function _save_data( bool $is_show, array $args, int $post_id ) {
-	$sub_keys = array_merge( array( 'media', 'type', 'delete' ), $is_show ? array( 'caption', 'caption_type', 'url' ) : array() );
+	$sub_keys = array_merge( array( 'media', 'type', 'delete' ), $is_show ? array( 'caption', 'url' ) : array() );
+	if ( $is_show && $args['do_show_caption_type_option'] ) {
+		$sub_keys[] = 'caption_type';
+	}
 	if ( $args['dual'] ) {
 		$sub_keys[] = 'media_sub';
 	}
@@ -448,17 +451,23 @@ function _save_data( bool $is_show, array $args, int $post_id ) {
 			$it['post_id'] = $pid;
 		}
 	}
-	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'caption_type', 'url', 'post_id' ) : array() );
+	$sub_keys = array_merge( array( 'media', 'type' ), $is_show ? array( 'caption', 'url', 'post_id' ) : array() );
+	if ( $is_show && $args['do_show_caption_type_option'] ) {
+		$sub_keys[] = 'caption_type';
+	}
 	if ( $args['dual'] ) {
 		$sub_keys[] = 'media_sub';
 	}
-	$its['options']                = array();
-	$its['options']['do_shuffle']  = ( $_POST[ "{$args['key']}_do_shuffle" ] ?? false ) ? true : false;  // phpcs:ignore
-	$its['options']['effect_type'] = 'slide';
+	$its['options']               = array();
+	$its['options']['do_shuffle'] = ( $_POST[ "{$args['key']}_do_shuffle" ] ?? false ) ? true : false;  // phpcs:ignore
 
-	$et = $_POST[ "{$args['key']}_effect_type" ] ?? '';  // phpcs:ignore
-	if ( in_array( $et, array( 'fade', 'slide', 'scroll' ), true ) ) {
-		$its['options']['effect_type'] = $et;
+	if ( $args['do_show_effect_type_option'] ) {
+		$its['options']['effect_type'] = 'slide';
+
+		$et = $_POST[ "{$args['key']}_effect_type" ] ?? '';  // phpcs:ignore
+		if ( in_array( $et, array( 'fade', 'slide', 'scroll' ), true ) ) {
+			$its['options']['effect_type'] = $et;
+		}
 	}
 	set_multiple_post_meta( $post_id, $args['key'], $its, $sub_keys, 'options' );
 }
