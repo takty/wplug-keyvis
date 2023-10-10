@@ -1,12 +1,9 @@
 /**
- *
  * Template Admin (JS)
  *
  * @author Takuto Yanagida
- * @version 2021-08-27
- *
+ * @version 2023-10-10
  */
-
 
 document.addEventListener('DOMContentLoaded', function () {
 	const ts = document.getElementsByClassName('wplug-keyvis-admin');
@@ -148,7 +145,7 @@ function wplug_keyvis_show_admin(t) {
 				const url = it.getElementsByClassName(CLS_URL)[0].value;
 				if (url) window.open(url);
 			});
-			setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; }, { parentGen: 1 });
+			window.wplug.keyvis.setLinkPicker(sel_url, false, (t, f) => { it.getElementsByClassName(CLS_URL)[0].value = f.url; }, { parentGen: 1 });
 		}
 
 		const tns = it.getElementsByClassName(CLS_TN);

@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2023-06-20
+ * @version 2023-10-10
  */
 
 namespace wplug\keyvis;
@@ -160,7 +160,7 @@ function _create_option_str( array $args, array $opts ): string {
  * @param string      $priority (Optional) The priority within the context where the box should show.
  */
 function add_meta_box_show( array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
-	add_meta_box_template_admin( true, $args, $title, $screen, $context );
+	add_meta_box_template_admin( true, $args, $title, $screen, $context, $priority );
 }
 
 /**
@@ -183,7 +183,7 @@ function save_meta_box_show( array $args, int $post_id ) {
  * @param string      $priority (Optional) The priority within the context where the box should show.
  */
 function add_meta_box_hero( array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
-	add_meta_box_template_admin( false, $args, $title, $screen, $context );
+	add_meta_box_template_admin( false, $args, $title, $screen, $context, $priority );
 }
 
 /**

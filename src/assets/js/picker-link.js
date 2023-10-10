@@ -1,21 +1,14 @@
 /**
- *
  * Link Picker (JS)
  *
  * @author Takuto Yanagida
- * @version 2023-02-10
- *
+ * @version 2023-10-10
  */
 
+window.wplug        = window.wplug ?? {}
+window.wplug.keyvis = window.wplug.keyvis ?? {}
 
-document.addEventListener('DOMContentLoaded', function () {
-	const elms = document.querySelectorAll('*[data-picker="link"]');
-	for (let i = 0; i < elms.length; i += 1) {
-		setLinkPicker(elms[i]);
-	}
-});
-
-const setLinkPicker = (function () {
+window.wplug.keyvis.setLinkPicker = (function () {
 
 	function setLinkPicker(elm, cls = false, fn = null, opts = {}) {
 		if (cls === false) cls = 'link';
@@ -25,10 +18,8 @@ const setLinkPicker = (function () {
 			if (elm.getAttribute('disabled')) return;
 			e.preventDefault();
 			createLink(f => {
-				if (parentGen !== -1) {
-					const p = getParent(e.target, opts.parentGen);
-					if (p) setItem(p, cls, f);
-				}
+				const p = (opts.parentGen !== -1) ? getParent(e.target, opts.parentGen) : null;
+				if (p) setItem(p, cls, f);
 				if (fn) fn(e.target, f);
 			}, opts.isInternalOnly, opts.isLinkTargetAllowed, opts.postType);
 		});
