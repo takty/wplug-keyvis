@@ -4,22 +4,47 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-06-04
+ * @version 2023-11-15
  */
+
+declare(strict_types=1);
 
 namespace wplug\keyvis;
 
-/**
+require_once __DIR__ . '/../keyvis.php';
+
+/** phpcs:ignore
  * Adds the meta box to template admin screen.
  *
- * @param bool        $is_show  Whether this slider is 'show'.
- * @param array       $args     Array of arguments.
- * @param string      $title    Title of the meta box.
- * @param string|null $screen   (Optional) The screen or screens on which to show the box.
- * @param string      $context  (Optional) The context within the screen where the box should display.
- * @param string      $priority (Optional) The priority within the context where the box should show.
+ * @param bool                          $is_show  Whether this slider is 'show'.
+ * phpcs:ignore
+ * @param array{
+ *     url_to?                     : string,
+ *     id?                         : string,
+ *     key?                        : string,
+ *     class?                      : string,
+ *     view_size?                  : string,
+ *     dual?                       : bool,
+ *     do_enable_video?            : bool,
+ *     do_scroll_picture?          : bool,
+ *     caption_type?               : string,
+ *     do_shuffle?                 : bool,
+ *     effect_type?                : string,
+ *     duration_time?              : int,
+ *     transition_time?            : int,
+ *     random_timing?              : bool,
+ *     background_visible?         : bool,
+ *     side_slide_visible?         : bool,
+ *     do_show_caption_type_option?: bool,
+ *     do_show_effect_type_option? : bool,
+ *     do_show_shuffle_option?     : bool,
+ * } $args Array of arguments.
+ * @param string                        $title    Title of the meta box.
+ * @param string|null                   $screen   (Optional) The screen or screens on which to show the box.
+ * @param 'advanced'|'normal'|'side'    $context  (Optional) The context within the screen where the box should display.
+ * @param 'core'|'default'|'high'|'low' $priority (Optional) The priority within the context where the box should show.
  */
-function add_meta_box_template_admin( bool $is_show, array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ) {
+function add_meta_box_template_admin( bool $is_show, array $args, string $title, ?string $screen = null, string $context = 'advanced', string $priority = 'default' ): void {
 	$args = _set_default_args( $args );
 	\add_meta_box(
 		"{$args['key']}_mb",
@@ -33,19 +58,41 @@ function add_meta_box_template_admin( bool $is_show, array $args, string $title,
 	);
 }
 
-/**
+/** phpcs:ignore
  * Stores the data of the meta box on template admin screen.
  *
- * @param bool  $is_show Whether this slider is 'show'.
- * @param array $args    Array of arguments.
- * @param int   $post_id Post ID.
+ * @param bool   $is_show Whether this slider is 'show'.
+ * phpcs:ignore
+ * @param array{
+ *     url_to?                     : string,
+ *     id?                         : string,
+ *     key?                        : string,
+ *     class?                      : string,
+ *     view_size?                  : string,
+ *     dual?                       : bool,
+ *     do_enable_video?            : bool,
+ *     do_scroll_picture?          : bool,
+ *     caption_type?               : string,
+ *     do_shuffle?                 : bool,
+ *     effect_type?                : string,
+ *     duration_time?              : int,
+ *     transition_time?            : int,
+ *     random_timing?              : bool,
+ *     background_visible?         : bool,
+ *     side_slide_visible?         : bool,
+ *     do_show_caption_type_option?: bool,
+ *     do_show_effect_type_option? : bool,
+ *     do_show_shuffle_option?     : bool,
+ * } $args Array of arguments.
+ * @param int    $post_id Post ID.
  */
-function save_meta_box_template_admin( bool $is_show, array $args, int $post_id ) {
-	$args = _set_default_args( $args );
-	if ( ! isset( $_POST[ "{$args['key']}_nonce" ] ) ) {
+function save_meta_box_template_admin( bool $is_show, array $args, int $post_id ): void {
+	$args  = _set_default_args( $args );
+	$nonce = $_POST[ "{$args['key']}_nonce" ] ?? null;  // phpcs:ignore
+	if ( ! is_string( $nonce ) ) {
 		return;
 	}
-	if ( ! wp_verify_nonce( sanitize_key( $_POST[ "{$args['key']}_nonce" ] ), $args['key'] ) ) {
+	if ( ! wp_verify_nonce( sanitize_key( $nonce ), $args['key'] ) ) {
 		return;
 	}
 	_save_data( $is_show, $args, $post_id );
@@ -55,16 +102,37 @@ function save_meta_box_template_admin( bool $is_show, array $args, int $post_id 
 // -----------------------------------------------------------------------------
 
 
-/**
+/** phpcs:ignore
  * Callback function for 'add_meta_box'.
  *
  * @access private
  *
  * @param bool     $is_show Whether this slider is 'show'.
- * @param array    $args    Array of arguments.
+ * phpcs:ignore
+ * @param array{
+ *     url_to?                    : string,
+ *     id                         : string,
+ *     key                        : string,
+ *     class                      : string,
+ *     view_size                  : string,
+ *     dual                       : bool,
+ *     do_enable_video            : bool,
+ *     do_scroll_picture          : bool,
+ *     caption_type               : string,
+ *     do_shuffle                 : bool,
+ *     effect_type                : string,
+ *     duration_time              : int,
+ *     transition_time            : int,
+ *     random_timing              : bool,
+ *     background_visible         : bool,
+ *     side_slide_visible         : bool,
+ *     do_show_caption_type_option: bool,
+ *     do_show_effect_type_option : bool,
+ *     do_show_shuffle_option     : bool,
+ * } $args Array of arguments.
  * @param \WP_Post $post    Current post.
  */
-function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $post ) {
+function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $post ): void {
 	wp_nonce_field( $args['key'], "{$args['key']}_nonce" );
 	list( $its, $opts ) = _get_data( $is_show, $args, $post->ID );
 
@@ -85,9 +153,10 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 			<div class="wplug-keyvis-table">
 		<?php
 		foreach ( $its as $idx => $it ) {
-			if ( 'image' === $it['type'] ) {
+			$type = isset( $it['type'] ) ? $it['type'] : '';
+			if ( 'image' === $type ) {
 				_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
-			} elseif ( 'video' === $it['type'] ) {
+			} elseif ( 'video' === $type ) {
 				_output_item_video( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
 			}
 		}
@@ -122,18 +191,36 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 	<?php
 }
 
-/**
+/** phpcs:ignore
  * Outputs the row of an image item.
  *
  * @access private
  *
  * @param bool   $is_show Whether this slider is 'show'.
- * @param array  $args    Array of arguments.
+ * phpcs:ignore
+ * @param array{
+ *     dual                       : bool,
+ *     caption_type               : string,
+ *     do_show_caption_type_option: bool,
+ * } $args Array of arguments.
  * @param string $key     The base key of input.
- * @param array  $it      The item.
+ * phpcs:ignore
+ * @param array{
+ *     media?       : string,
+ *     title?       : string,
+ *     filename?    : string,
+ *     img_tag?     : string,
+ *     media_sub?   : string,
+ *     title_sub?   : string,
+ *     filename_sub?: string,
+ *     img_tag_sub? : string,
+ *     caption?     : string,
+ *     url?         : string,
+ *     caption_type?: string,
+ * } $it The item.
  * @param string $cls     CSS class name.
  */
-function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls ) {
+function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls ): void {
 	_output_row_common( $is_show, $args, $key, $it, $cls );
 	if ( $args['dual'] ) {
 		echo '<div class="wplug-keyvis-thumbnail-wrap">';
@@ -150,16 +237,26 @@ function _output_item_image( bool $is_show, array $args, string $key, array $it,
 	<?php
 }
 
-/**
+/** phpcs:ignore
  * Outputs the thumbnail row of image items.
  *
  * @access private
  *
- * @param string $key     The base key of input.
- * @param array  $it      The item.
- * @param string $name_pf Input name postfix.
+ * @param string    $key The base key of input.
+ * phpcs:ignore
+ * @param array{
+ *     media?       : string,
+ *     title?       : string,
+ *     filename?    : string,
+ *     img_tag?     : string,
+ *     media_sub?   : string,
+ *     title_sub?   : string,
+ *     filename_sub?: string,
+ *     img_tag_sub? : string,
+ * } $it The item.
+ * @param ''|'_sub' $name_pf Input name postfix.
  */
-function _output_row_tn( string $key, array $it, string $name_pf ) {
+function _output_row_tn( string $key, array $it, string $name_pf ): void {
 	$media = esc_attr( $it[ "media$name_pf" ] ?? '' );
 	$title = $it[ "title$name_pf" ] ?? '';
 	$fn    = $it[ "filename$name_pf" ] ?? '';
@@ -183,18 +280,31 @@ function _output_row_tn( string $key, array $it, string $name_pf ) {
 	<?php
 }
 
-/**
+/** phpcs:ignore
  * Outputs the row of a video item.
  *
  * @access private
  *
  * @param bool   $is_show Whether this slider is 'show'.
- * @param array  $args    Array of arguments.
+ * phpcs:ignore
+ * @param array{
+ *     caption_type               : string,
+ *     do_show_caption_type_option: bool,
+ * } $args Array of arguments.
  * @param string $key     The base key of input.
- * @param array  $it      The item.
+ * phpcs:ignore
+ * @param array{
+ *     media?       : string,
+ *     title?       : string,
+ *     filename?    : string,
+ *     video?       : string,
+ *     caption?     : string,
+ *     url?         : string,
+ *     caption_type?: string,
+ * } $it The item.
  * @param string $cls     CSS class name.
  */
-function _output_item_video( bool $is_show, array $args, string $key, array $it, string $cls ) {
+function _output_item_video( bool $is_show, array $args, string $key, array $it, string $cls ): void {
 	$media = $it['media'] ?? '';
 	$title = $it['title'] ?? '';
 	$fn    = $it['filename'] ?? '';
@@ -221,18 +331,27 @@ function _output_item_video( bool $is_show, array $args, string $key, array $it,
 	<?php
 }
 
-/**
+/** phpcs:ignore
  * Outputs the common row of items.
  *
  * @access private
  *
  * @param bool   $is_show Whether this slider is 'show'.
- * @param array  $args    Array of arguments.
+ * phpcs:ignore
+ * @param array{
+ *     caption_type               : string,
+ *     do_show_caption_type_option: bool,
+ * } $args Array of arguments.
  * @param string $key     The base key of input.
- * @param array  $it      The item.
+ * phpcs:ignore
+ * @param array{
+ *     caption?     : string,
+ *     url?         : string,
+ *     caption_type?: string,
+ * } $it The item.
  * @param string $cls     CSS class name.
  */
-function _output_row_common( bool $is_show, array $args, string $key, array $it, string $cls ) {
+function _output_row_common( bool $is_show, array $args, string $key, array $it, string $cls ): void {
 	$cap = $it['caption'] ?? '';
 	$url = $it['url'] ?? '';
 

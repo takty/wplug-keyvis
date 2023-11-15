@@ -4,8 +4,10 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2022-02-21
+ * @version 2023-11-15
  */
+
+declare(strict_types=1);
 
 namespace wplug\keyvis;
 
@@ -13,14 +15,18 @@ namespace wplug\keyvis;
  * Separates a line.
  *
  * @param string $str A string.
- * @return array An array of strings.
+ * @return string[] An array of strings.
  */
 function separate_line( string $str ): array {
+	$ls = preg_split( '/　　|<\s*br\s*\/?>/ui', $str );
+	if ( ! is_array( $ls ) ) {
+		return array( $str );
+	}
 	return array_map(
-		function ( $s ) {
+		function ( string $s ) {
 			return separate_text_and_make_spans( $s );
 		},
-		preg_split( '/　　|<\s*br\s*\/?>/ui', $str )
+		$ls
 	);
 }
 
@@ -44,7 +50,7 @@ function separate_text_and_make_spans( string $text ): string {
  * Separates a text.
  *
  * @param string $text A string.
- * @return array An array of text parts.
+ * @return array{ string, bool }[] An array of text parts.
  */
 function separate_text( string $text ): array {
 	$pairs  = array(
