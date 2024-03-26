@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2023-11-15
+ * @version 2024-03-26
  */
 
 declare(strict_types=1);
@@ -109,7 +109,9 @@ function _register_script( string $url_to ): void {
 				wp_register_script( 'wplug-keyvis-hero', \wplug\abs_url( $url_to, './assets/js/hero.min.js' ), array(), '1.0', false );
 				wp_register_style( 'wplug-keyvis-show', \wplug\abs_url( $url_to, './assets/css/show.min.css' ), array(), '1.0' );
 				wp_register_style( 'wplug-keyvis-hero', \wplug\abs_url( $url_to, './assets/css/hero.min.css' ), array(), '1.0' );
-			}
+			},
+			10,
+			0
 		);
 	}
 }
@@ -215,7 +217,7 @@ function _create_option_str( array $args, array $opts ): string {
 		'side_slide_visible' => $args['side_slide_visible'],
 	);
 	$str  = wp_json_encode( $opts );
-	return $str ? $str : '';
+	return is_string( $str ) ? $str : '';
 }
 
 
@@ -410,8 +412,10 @@ function the_show( array $args, ?int $post_id = null ): bool {
 		$type     = isset( $it['type'] ) ? $it['type'] : '';
 		$cap_type = isset( $it['caption_type'] ) ? $it['caption_type'] : $args['caption_type'];
 		if ( 'image' === $type ) {
+			/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 			_echo_slide_item_img( $it, $cap_type, true, $args['do_scroll_picture'] );
 		} elseif ( 'video' === $type ) {
+			/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 			_echo_slide_item_video( $it, $cap_type, true );
 		}
 	}
@@ -423,6 +427,7 @@ function the_show( array $args, ?int $post_id = null ): bool {
 		<div class="gida-slider-show-rivets"></div>
 	</section>
 	<?php
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	$opts_str = _create_option_str( $args, $opts );
 	wp_add_inline_script( 'wplug-keyvis-show', "GIDA.slider_show('$dom_id', $opts_str);" );
 	return true;
@@ -481,8 +486,10 @@ function the_hero( array $args, ?int $post_id = null ): bool {
 	foreach ( $its as $it ) {
 		$type = isset( $it['type'] ) ? $it['type'] : '';
 		if ( 'image' === $type ) {
+			/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 			_echo_slide_item_img( $it, '', false, $args['do_scroll_picture'] );
 		} elseif ( 'video' === $type ) {
+			/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 			_echo_slide_item_video( $it, '', false );
 		}
 	}
@@ -491,6 +498,7 @@ function the_hero( array $args, ?int $post_id = null ): bool {
 		</div>
 	</section>
 	<?php
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	$opts_str = _create_option_str( $args, $opts );
 	wp_add_inline_script( 'wplug-keyvis-hero', "GIDA.slider_hero('$dom_id', $opts_str);" );
 	return true;
@@ -759,7 +767,7 @@ function _save_data( bool $is_show, array $args, int $post_id ): void {
 		$sub_keys[] = 'media_sub';
 	}
 	$its['options']               = array();
-	$its['options']['do_shuffle'] = ( $_POST[ "{$args['key']}_do_shuffle" ] ?? false ) ? true : false;  // phpcs:ignore
+	$its['options']['do_shuffle'] = ( '' !== ( $_POST[ "{$args['key']}_do_shuffle" ] ?? '' ) );  // phpcs:ignore
 
 	if ( $args['do_show_effect_type_option'] ) {
 		$its['options']['effect_type'] = 'slide';
@@ -818,7 +826,7 @@ function _save_data( bool $is_show, array $args, int $post_id ): void {
  *         url?         : string,
  *         caption_type?: string,
  *     }[],
- *     array{effect_type?: string, do_shuffle?: string}
+ *     array{ effect_type?: string, do_shuffle?: bool }
  * } Items and options.
  */
 function _get_data( bool $is_show, array $args, int $post_id ): array {
@@ -863,7 +871,7 @@ function _get_data( bool $is_show, array $args, int $post_id ): array {
 			}
 		}
 	}
-	if ( ! is_admin() && ( $opts['do_shuffle'] ?? $args['do_shuffle'] ) ) {
+	if ( ! is_admin() && true === ( is_bool( $opts['do_shuffle'] ?? null ) ? $opts['do_shuffle'] : $args['do_shuffle'] ) ) {
 		shuffle( $its );
 	}
 	return array( $its, $opts );  // @phpstan-ignore-line

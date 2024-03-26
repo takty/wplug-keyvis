@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2023-11-15
+ * @version 2024-03-26
  */
 
 declare(strict_types=1);
@@ -92,7 +92,7 @@ function save_meta_box_template_admin( bool $is_show, array $args, int $post_id 
 	if ( ! is_string( $nonce ) ) {
 		return;
 	}
-	if ( ! wp_verify_nonce( sanitize_key( $nonce ), $args['key'] ) ) {
+	if ( false === wp_verify_nonce( sanitize_key( $nonce ), $args['key'] ) ) {
 		return;
 	}
 	_save_data( $is_show, $args, $post_id );
@@ -144,7 +144,9 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 	<div class="wplug-keyvis-admin <?php echo esc_attr( $is_show ? 'show' : 'hero' ); ?>" data-key="<?php echo esc_attr( $args['key'] ); ?>">
 		<div class="wplug-keyvis-body">
 	<?php
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	_output_item_image( $is_show, $args, '', array(), 'wplug-keyvis-item-template-img' );
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	_output_item_video( $is_show, $args, '', array(), 'wplug-keyvis-item-template-video' );
 	?>
 	<?php if ( 0 === count( $its ) ) : ?>
@@ -155,8 +157,10 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 		foreach ( $its as $idx => $it ) {
 			$type = isset( $it['type'] ) ? $it['type'] : '';
 			if ( 'image' === $type ) {
+				/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 				_output_item_image( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
 			} elseif ( 'video' === $type ) {
+				/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 				_output_item_video( $is_show, $args, $args['key'] . "[$idx]", $it, 'wplug-keyvis-item' );
 			}
 		}
@@ -176,7 +180,7 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
 					</label>
 		<?php endif; ?>
 		<?php if ( $args['do_show_shuffle_option'] ) : ?>
-					<label><input type="checkbox" value="1" name="<?php echo esc_attr( $key ); ?>_do_shuffle"<?php echo $do_shuffle ? 'checked' : ''; ?>><?php esc_html_e( 'Shuffled', 'wplug_keyvis' ); ?></label>
+					<label><input type="checkbox" name="<?php echo esc_attr( $key ); ?>_do_shuffle"<?php echo $do_shuffle ? ' checked' : ''; ?>><?php esc_html_e( 'Shuffled', 'wplug_keyvis' ); ?></label>
 		<?php endif; ?>
 				</div>
 				<div>
@@ -221,13 +225,17 @@ function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $p
  * @param string $cls     CSS class name.
  */
 function _output_item_image( bool $is_show, array $args, string $key, array $it, string $cls ): void {
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	_output_row_common( $is_show, $args, $key, $it, $cls );
 	if ( $args['dual'] ) {
 		echo '<div class="wplug-keyvis-thumbnail-wrap">';
+		/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 		_output_row_tn( $key, $it, '' );
+		/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 		_output_row_tn( $key, $it, '_sub' );
 		echo '</div>';
 	} else {
+		/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 		_output_row_tn( $key, $it, '' );
 	}
 	?>
@@ -313,6 +321,7 @@ function _output_item_video( bool $is_show, array $args, string $key, array $it,
 	if ( ! empty( $title ) && strlen( $title ) < strlen( $fn ) && strpos( $fn, $title ) === 0 ) {
 		$title = '';
 	}
+	/** @psalm-suppress InvalidArgument */  // phpcs:ignore
 	_output_row_common( $is_show, $args, $key, $it, $cls );
 	?>
 			<div class="wplug-keyvis-thumbnail">
@@ -361,7 +370,7 @@ function _output_row_common( bool $is_show, array $args, string $key, array $it,
 		<div>
 			<div class="wplug-keyvis-handle">=</div>
 			<label class="widget-control-remove wplug-keyvis-delete-label"><?php esc_html_e( 'Remove', 'wplug_keyvis' ); ?><br>
-			<input type="checkbox" name="<?php echo esc_attr( $key ); ?>[delete]" class="wplug-keyvis-delete" value="1"></label>
+			<input type="checkbox" name="<?php echo esc_attr( $key ); ?>[delete]" class="wplug-keyvis-delete"></label>
 		</div>
 		<div>
 	<?php if ( $is_show ) : ?>
