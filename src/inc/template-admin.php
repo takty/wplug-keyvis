@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2024-03-26
+ * @version 2024-04-18
  */
 
 declare(strict_types=1);
@@ -134,7 +134,8 @@ function save_meta_box_template_admin( bool $is_show, array $args, int $post_id 
  */
 function _cb_output_html_template_admin( bool $is_show, array $args, \WP_Post $post ): void {
 	wp_nonce_field( $args['key'], "{$args['key']}_nonce" );
-	list( $its, $opts ) = _get_data( $is_show, $args, $post->ID );
+	/** @psalm-suppress RedundantCastGivenDocblockType */  // phpcs:ignore
+	list( $its, $opts ) = _get_data( $is_show, $args, (int) $post->ID );  // For classic editor.
 
 	$do_shuffle  = $opts['do_shuffle'] ?? $args['do_shuffle'];
 	$effect_type = $opts['effect_type'] ?? $args['effect_type'];
