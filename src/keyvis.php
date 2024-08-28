@@ -4,7 +4,7 @@
  *
  * @package Wplug Keyvis
  * @author Takuto Yanagida
- * @version 2024-03-26
+ * @version 2024-08-28
  */
 
 declare(strict_types=1);
@@ -120,6 +120,7 @@ function _register_script( string $url_to ): void {
  * Assign default arguments.
  *
  * @access private
+ *
  * phpcs:ignore
  * @param array{
  *     url_to?                     : string,
@@ -195,6 +196,7 @@ function _set_default_args( array $args ): array {
  * Create option strings.
  *
  * @access private
+ *
  * phpcs:ignore
  * @param array{
  *     effect_type       : string,
@@ -508,6 +510,7 @@ function the_hero( array $args, ?int $post_id = null ): bool {
  * Displays a image slide item.
  *
  * @access private
+ *
  * phpcs:ignore
  * @param array{
  *     img_tag?    : string,
@@ -541,6 +544,7 @@ function _echo_slide_item_img( array $it, string $caption_type, bool $is_show, b
  * Displays a video slide item.
  *
  * @access private
+ *
  * phpcs:ignore
  * @param array{
  *     video?  : string,
@@ -708,6 +712,7 @@ function the_items( array $args, ?int $post_id = null ): bool {
  *
  * @access private
  *
+ * phpcs:ignore
  * @param bool   $is_show Whether this slider is 'show'.
  * phpcs:ignore
  * @param array{
@@ -786,6 +791,7 @@ function _save_data( bool $is_show, array $args, int $post_id ): void {
  * @psalm-suppress MoreSpecificReturnType, LessSpecificReturnStatement
  * @access private
  *
+ * phpcs:ignore
  * @param bool   $is_show Whether this slider is 'show'.
  * phpcs:ignore
  * @param array{
@@ -858,10 +864,10 @@ function _get_data( bool $is_show, array $args, int $post_id ): array {
 			$it['type'] = 'image';
 		}
 		if ( 'image' === $it['type'] ) {
-			if ( is_string( $it['media'] ) && ! empty( $it['media'] ) ) {
+			if ( ! empty( $it['media'] ) && is_string( $it['media'] ) ) {
 				_get_images( $it, $it['media'], $args['view_size'] );
 			}
-			if ( $args['dual'] && is_string( $it['media_sub'] ) && ! empty( $it['media_sub'] ) ) {
+			if ( $args['dual'] && ! empty( $it['media_sub'] ) && is_string( $it['media_sub'] ) ) {
 				_get_images( $it, $it['media_sub'], $args['view_size'], '_sub' );
 			}
 		} elseif ( 'video' === $it['type'] ) {
