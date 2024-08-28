@@ -91,16 +91,19 @@ function enqueue_style(): void {
  */
 function _register_script( string $url_to ): void {
 	if ( is_admin() ) {
-		add_action(
-			'admin_enqueue_scripts',
-			function () use ( $url_to ) {
-				wp_enqueue_script( 'wplug-keyvis-picker-link', \wplug\abs_url( $url_to, './assets/js/picker-link.min.js' ), array( 'wplink', 'jquery-ui-autocomplete' ), '1.0', false );
-				wp_enqueue_script( 'wplug-keyvis-picker-media', \wplug\abs_url( $url_to, './assets/js/picker-media.min.js' ), array(), '1.0', true );
-				wp_enqueue_script( 'wplug-keyvis-sortable', \wplug\abs_url( $url_to, './assets/js/html5sortable.min.js' ), array(), '1.0', false );
-				wp_enqueue_script( 'wplug-keyvis-template-admin', \wplug\abs_url( $url_to, './assets/js/template-admin.min.js' ), array( 'wplug-keyvis-picker-link', 'wplug-keyvis-picker-media', 'wplug-keyvis-sortable' ), '1.0', false );
-				wp_enqueue_style( 'wplug-keyvis-template-admin', \wplug\abs_url( $url_to, './assets/css/template-admin.min.css' ), array(), '1.0' );
-			}
-		);
+		global $pagenow;
+		if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
+			add_action(
+				'admin_enqueue_scripts',
+				function () use ( $url_to ) {
+					wp_enqueue_script( 'wplug-keyvis-picker-link', \wplug\abs_url( $url_to, './assets/js/picker-link.min.js' ), array( 'wplink', 'jquery-ui-autocomplete' ), '1.0', false );
+					wp_enqueue_script( 'wplug-keyvis-picker-media', \wplug\abs_url( $url_to, './assets/js/picker-media.min.js' ), array(), '1.0', true );
+					wp_enqueue_script( 'wplug-keyvis-sortable', \wplug\abs_url( $url_to, './assets/js/html5sortable.min.js' ), array(), '1.0', false );
+					wp_enqueue_script( 'wplug-keyvis-template-admin', \wplug\abs_url( $url_to, './assets/js/template-admin.min.js' ), array( 'wplug-keyvis-picker-link', 'wplug-keyvis-picker-media', 'wplug-keyvis-sortable' ), '1.0', false );
+					wp_enqueue_style( 'wplug-keyvis-template-admin', \wplug\abs_url( $url_to, './assets/css/template-admin.min.css' ), array(), '1.0' );
+				}
+			);
+		}
 	} else {
 		add_action(
 			'wp_enqueue_scripts',
